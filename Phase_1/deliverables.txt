@@ -1,3 +1,0 @@
-team029_p1_ifd.pdf - your IFD
-team029_p1_eer.pdf - your EER
-team029_p1_report.pdf - your data types, constraints, task decomposition, and abstract code
