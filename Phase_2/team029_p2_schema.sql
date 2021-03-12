@@ -40,6 +40,10 @@ CREATE TABLE DateAdCampaign (
   PRIMARY KEY (`date`, description)
 );
 
+CREATE TABLE Category (
+  Name varchar(250) PRIMARY KEY
+);
+
 -- Constraints   Foreign Keys: FK_ChildTable_childColumn_ParentTable_parentColumn
 ALTER TABLE DateHolidayName
   ADD CONSTRAINT fk_DateHolidayName_date_Date_date FOREIGN KEY (`date`) REFERENCES `Date` (`date`) ON DELETE CASCADE ON UPDATE CASCADE;
