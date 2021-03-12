@@ -40,9 +40,16 @@ CREATE TABLE DateAdCampaign (
   PRIMARY KEY (`date`, description)
 );
 
+CREATE TABLE Product(
+  PID INTEGER NOT NULL,
+  Name varchar(250) NOT NULL,
+  Price DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (PID)
+);
+
 CREATE TABLE Product-Category (
   PID INTEGER NOT NULL,
-  name varchar(250) 
+  Name varchar(250), 
   CONSTRAINT PK_Product_Category PRIMARY KEY (PID, Name)
 );
 
