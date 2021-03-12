@@ -40,8 +40,15 @@ CREATE TABLE DateAdCampaign (
   PRIMARY KEY (`date`, description)
 );
 
+CREATE TABLE Product-Category (
+  PID INTEGER NOT NULL,
+  name varchar(250) 
+  CONSTRAINT PK_Product_Category PRIMARY KEY (PID, Name)
+);
+
 CREATE TABLE Category (
-  Name varchar(250) PRIMARY KEY
+  Name varchar(250) NOT NULL
+  PRIMARY KEY (Name)
 );
 
 -- Constraints   Foreign Keys: FK_ChildTable_childColumn_ParentTable_parentColumn
