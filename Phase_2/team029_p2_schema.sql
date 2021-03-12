@@ -49,8 +49,9 @@ CREATE TABLE Product(
 
 CREATE TABLE Product-Category (
   PID INTEGER NOT NULL,
-  Name varchar(250), 
-  CONSTRAINT PK_Product_Category PRIMARY KEY (PID, Name)
+  Name varchar(250) NOT NULL, 
+  FOREIGN KEY (PID) REFERENCES Product(PID)
+  FOREIGN KEY (Name) REFERENCES Category(Name)
 );
 
 CREATE TABLE Category (
