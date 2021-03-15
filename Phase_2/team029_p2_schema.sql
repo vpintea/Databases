@@ -18,6 +18,33 @@ FLUSH PRIVILEGES;
 
 -- Tables
 
+CREATE TABLE City (
+    city_name varchar(50) NOT NULL,
+    state varchar(50) NOT NULL,
+    population int(255) NOT NULL,
+    PRIMARY KEY (city_name)
+);
+
+CREATE TABLE Store (
+    store_no int NOT NULL,
+    phone_no varchar(20) NOT NULL,
+    address varchar(250) NOT NULL,
+    city_name varchar(250) NOT NULL,
+    PRIMARY KEY (store_no),
+    FOREIGN KEY (city_name) REFERENCES City(city_name)
+);
+
+CREATE TABLE Childcare (
+    `limit` time NULL,
+    store_no int NOT NULL,
+    FOREIGN KEY (store_no) REFERENCES Store(store_no)
+);
+
+CREATE TABLE FoodService (
+    store_no int NOT NULL,
+    FOREIGN KEY (store_no) REFERENCES Store(store_no)
+);
+
 CREATE TABLE Sold (
   StoreNo INTEGER NOT NULL,
   `date` Date NOT NULL,
