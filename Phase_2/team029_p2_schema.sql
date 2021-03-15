@@ -18,6 +18,27 @@ FLUSH PRIVILEGES;
 
 -- Tables
 
+CREATE TABLE Sold (
+  StoreNo INTEGER NOT NULL,
+  `date` Date NOT NULL,
+  PID INTEGER NOT NULL,
+  FOREIGN KEY (StoreNo) REFERENCES Store(StoreNo),
+  FOREIGN KEY (`date`) REFERENCES Date(`date`),
+  FOREIGN KEY (PID) REFERENCES Product(PID),
+  Quantity INTEGER NOT NULL
+)
+
+CREATE TABLE Restaurant (
+  StoreNo INTEGER NOT NULL,
+  FOREIGN KEY (StoreNo) REFERENCES Store(StoreNo)
+)
+
+
+CREATE TABLE Snackbar (
+  StoreNo INTEGER NOT NULL,
+  FOREIGN KEY (StoreNo) REFERENCES Store(StoreNo)
+)
+
 CREATE TABLE `Date` (
   `date` date NOT NULL,
   PRIMARY KEY (`date`)
@@ -44,7 +65,7 @@ CREATE TABLE Has_Discount (
   'date' DATE, --ALREADY NOT NULL FROM DATE TABLE
   PID INTEGER, --ALREADY NOT NULL FROM PRODUCT TABLE
   DiscountPrice DECIMAL(10,2) NOT NULL,
-  FOREIGN KEY (DATE) REFERENCES Date(date)
+  FOREIGN KEY (DATE) REFERENCES Date(date),
   FOREIGN KEY (PID) REFERENCES Date(date)
 );
 
@@ -57,8 +78,8 @@ CREATE TABLE Product (
 
 CREATE TABLE Product-Category (
   PID INTEGER NOT NULL,
-  Name varchar(250) NOT NULL, 
-  FOREIGN KEY (PID) REFERENCES Product(PID)
+  Name varchar(250) NOT NULL,
+  FOREIGN KEY (PID) REFERENCES Product(PID),
   FOREIGN KEY (Name) REFERENCES Category(Name)
 );
 
