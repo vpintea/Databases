@@ -72,31 +72,36 @@ CREATE TABLE `Date` (
 );
 
 CREATE TABLE DateHolidayName (
+  --MARIA
   `date` date NOT NULL,
   holiday_name varchar(250) NOT NULL,
   PRIMARY KEY (`date`, holiday_name)
 );
 
 CREATE TABLE AdCampaign (
+  --MARIA
   description varchar(250) NOT NULL,
   PRIMARY KEY (description)
 );
 
 CREATE TABLE DateAdCampaign (
+  --MARIA
   `date` date NOT NULL,
   description varchar(250) NOT NULL,
   PRIMARY KEY (`date`, description)
 );
 
 CREATE TABLE Has_Discount (
-  'date' DATE, --ALREADY NOT NULL FROM DATE TABLE
+  --VAL
+  `date` date, --ALREADY NOT NULL FROM DATE TABLE
   PID INTEGER, --ALREADY NOT NULL FROM PRODUCT TABLE
   DiscountPrice DECIMAL(10,2) NOT NULL,
-  FOREIGN KEY (DATE) REFERENCES Date(date),
-  FOREIGN KEY (PID) REFERENCES Date(date)
+  FOREIGN KEY ('date') REFERENCES Date(`date`),
+  FOREIGN KEY (PID) REFERENCES Date(`date`)
 );
 
 CREATE TABLE Product (
+  --VAL
   PID INTEGER NOT NULL,
   Name varchar(250) NOT NULL,
   Price DECIMAL(10,2) NOT NULL,
@@ -104,6 +109,7 @@ CREATE TABLE Product (
 );
 
 CREATE TABLE Product-Category (
+  --VAL
   PID INTEGER NOT NULL,
   Name varchar(250) NOT NULL,
   FOREIGN KEY (PID) REFERENCES Product(PID),
@@ -111,14 +117,20 @@ CREATE TABLE Product-Category (
 );
 
 CREATE TABLE Category (
+  --VAL
   Name varchar(250) NOT NULL
   PRIMARY KEY (Name)
 );
 
 -- Constraints   Foreign Keys: FK_ChildTable_childColumn_ParentTable_parentColumn
-ALTER TABLE DateHolidayName
+ALTER TABLE DateHolidayName --MARIA
   ADD CONSTRAINT fk_DateHolidayName_date_Date_date FOREIGN KEY (`date`) REFERENCES `Date` (`date`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE DateAdCampaign
+ALTER TABLE DateAdCampaign --MARIA
   ADD CONSTRAINT fk_DateAdCampaign_date_Date_date FOREIGN KEY (`date`) REFERENCES `Date` (`date`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT fk_DateAdCampaign_description_AdCampaign_description FOREIGN KEY (description) REFERENCES AdCampaign (description) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Has_Discount --VAL
+  ADD CONSTRAINT fk_Has_Discount_date_Date_date FOREIGN KEY (`date`) REFERENCES `Date` (`date`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT fk_Has_Discount_PID_Product_PID FOREIGN KEY (PID) REFERENCES Product(PID) ON DELETE CASCADE ON UPDATE CASCADE
+
