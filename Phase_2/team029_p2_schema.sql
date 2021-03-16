@@ -96,6 +96,9 @@ CREATE TABLE Has_Discount (
   `date` date, --ALREADY NOT NULL FROM DATE TABLE
   PID INTEGER, --ALREADY NOT NULL FROM PRODUCT TABLE
   DiscountPrice DECIMAL(10,2) NOT NULL
+  PRIMARY KEY (`date`, PID)
+  KEY `date` (`date`)
+  KEY PID (PID)
 );
 
 CREATE TABLE Product (
@@ -110,6 +113,9 @@ CREATE TABLE Product-Category (
   --VAL
   PID INTEGER NOT NULL,
   Name varchar(250) NOT NULL
+  PRIMARY KEY (PID, Name)
+  KEY PID (PID)
+  KEY Name (Name)
 );
 
 CREATE TABLE Category (
