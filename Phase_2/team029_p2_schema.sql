@@ -91,14 +91,15 @@ CREATE TABLE DateAdCampaign (
   PRIMARY KEY (`date`, description)
 );
 
-CREATE TABLE Has_Discount (
-  --VAL
+CREATE TABLE HasDiscount (--VAL
   `date` date, --ALREADY NOT NULL FROM DATE TABLE
   PID INTEGER, --ALREADY NOT NULL FROM PRODUCT TABLE
-  DiscountPrice DECIMAL(10,2) NOT NULL
-  PRIMARY KEY (`date`, PID)
-  KEY `date` (`date`)
-  KEY PID (PID)
+  DiscountPrice DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`date`, PID),
+  KEY `date` (`date`), --don't think this is needed but used for fast indexing
+  KEY PID (PID),       --don't think this is needed but used for fast indexing
+  FOREIGN KEY (`date` REFERENCES `Date`(`date`)) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (PID REFERENCES PID(PID)) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Product (
@@ -109,18 +110,20 @@ CREATE TABLE Product (
   PRIMARY KEY (PID)
 );
 
-CREATE TABLE Product-Category (
+CREATE TABLE ProductCategory (
   --VAL
   PID INTEGER NOT NULL,
-  Name varchar(250) NOT NULL
-  PRIMARY KEY (PID, Name)
-  KEY PID (PID)
-  KEY Name (Name)
+  Name varchar(250) NOT NULL,
+  PRIMARY KEY (PID, Name),
+  KEY PID (PID),        --don't think this is needed but used for fast indexing
+  KEY Name (Name)       --don't think this is needed but used for fast indexing
+  FOREIGN KEY (PID REFERENCES Product(PID)) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (Name REFERENCES Category(Name)) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Category (
   --VAL
-  Name varchar(250) NOT NULL
+  Name varchar(250) NOT NULL,
   PRIMARY KEY (Name)
 );
 
@@ -132,10 +135,10 @@ ALTER TABLE DateAdCampaign --MARIA
   ADD CONSTRAINT fk_DateAdCampaign_date_Date_date FOREIGN KEY (`date`) REFERENCES `Date` (`date`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT fk_DateAdCampaign_description_AdCampaign_description FOREIGN KEY (description) REFERENCES AdCampaign (description) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Has_Discount --VAL
-  ADD CONSTRAINT fk_Has_Discount_date_Date_date FOREIGN KEY (`date`) REFERENCES `Date` (`date`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT fk_Has_Discount_PID_Product_PID FOREIGN KEY (PID) REFERENCES Product(PID) ON DELETE CASCADE ON UPDATE CASCADE
+--ALTER TABLE Has_Discount --VAL
+-- ADD CONSTRAINT fk_Has_Discount_date_Date_date FOREIGN KEY (`date`) REFERENCES `Date` (`date`) ON DELETE CASCADE ON UPDATE CASCADE,
+-- ADD CONSTRAINT fk_Has_Discount_PID_Product_PID FOREIGN KEY (PID) REFERENCES Product(PID) ON DELETE CASCADE ON UPDATE CASCADE
 
-ALTER Product-Category --VAL
-  ADD CONSTRAINT fk_Product-Category_PID_Product_PID FOREIGN KEY (PID) REFERENCES Product(PID) ON DELETE CASCADE ON UPDATE CASCADE
-  ADD CONSTRAINT fk_Product-Category_Name_Category_Name FOREIGN KEY (Name) REFERENCES Category(Name) ON DELETE CASCADE ON UPDATE CASCADE
+--ALTER Product-Category --VAL
+--  ADD CONSTRAINT fk_Product-Category_PID_Product_PID FOREIGN KEY (PID) REFERENCES Product(PID) ON DELETE CASCADE ON UPDATE CASCADE
+--  ADD CONSTRAINT fk_Product-Category_Name_Category_Name FOREIGN KEY (Name) REFERENCES Category(Name) ON DELETE CASCADE ON UPDATE CASCADE
