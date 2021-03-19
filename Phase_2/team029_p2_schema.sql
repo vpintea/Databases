@@ -98,8 +98,8 @@ CREATE TABLE HasDiscount (--VAL
   PRIMARY KEY (`date`, PID),
   KEY `date` (`date`), --don't think this is needed but used for fast indexing
   KEY PID (PID),       --don't think this is needed but used for fast indexing
-  FOREIGN KEY (`date` REFERENCES `Date`(`date`)) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (PID REFERENCES PID(PID)) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`date`) REFERENCES `Date`(`date`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (PID) REFERENCES Product(PID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Product (
@@ -110,15 +110,14 @@ CREATE TABLE Product (
   PRIMARY KEY (PID)
 );
 
-CREATE TABLE ProductCategory (
-  --VAL
+CREATE TABLE ProductCategory (--VAL
   PID INTEGER NOT NULL,
   Name varchar(250) NOT NULL,
   PRIMARY KEY (PID, Name),
   KEY PID (PID),        --don't think this is needed but used for fast indexing
   KEY Name (Name)       --don't think this is needed but used for fast indexing
-  FOREIGN KEY (PID REFERENCES Product(PID)) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (Name REFERENCES Category(Name)) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (PID) REFERENCES Product(PID) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (Name) REFERENCES Category(Name) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Category (
