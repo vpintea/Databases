@@ -18,25 +18,29 @@ FLUSH PRIVILEGES;
 -- Tables
 
 CREATE TABLE City (
-    city_name varchar(50) NOT NULL,
+    city varchar(50) NOT NULL,
     state varchar(50) NOT NULL,
     population int(255) NOT NULL,
-    PRIMARY KEY (city_name)
+    PRIMARY KEY (city, state)
 );
 
 CREATE TABLE Store (
-    store_no int NOT NULL,
+    store_no integer NOT NULL,
     phone_no varchar(20) NOT NULL,
     address varchar(250) NOT NULL,
-    city_name varchar(250) NOT NULL,
+    city varchar(250) NOT NULL,
+    state varchar(50) NOT NULL,
+    restaurant boolean NOT NULL,
+    snackbar boolean NOT NULL,
     PRIMARY KEY (store_no),
-    FOREIGN KEY (city_name) REFERENCES City(city_name)
+    FOREIGN KEY (city) REFERENCES City(city) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (state) REFERENCES City(state) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Childcare (
     `limit` time NULL,
-    store_no int NOT NULL,
-    FOREIGN KEY (store_no) REFERENCES Store(store_no)
+    store_no integer NOT NULL,
+    FOREIGN KEY (store_no) REFERENCES Store(store_no) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `Date` (
@@ -107,13 +111,3 @@ CREATE TABLE ProductCategory (
   FOREIGN KEY (pid) REFERENCES Product(pid) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (name) REFERENCES Category(name) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-
-
-
-
-
-
-
-
-
