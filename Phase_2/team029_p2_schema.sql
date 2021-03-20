@@ -18,8 +18,8 @@ FLUSH PRIVILEGES;
 -- Tables
 
 CREATE TABLE City (
-    city varchar(50) NOT NULL,
-    state varchar(50) NOT NULL,
+    city varchar(250) NOT NULL,
+    state varchar(250) NOT NULL,
     population int(255) NOT NULL,
     PRIMARY KEY (city, state)
 );
@@ -29,12 +29,11 @@ CREATE TABLE Store (
     phone_no varchar(20) NOT NULL,
     address varchar(250) NOT NULL,
     city varchar(250) NOT NULL,
-    state varchar(50) NOT NULL,
+    state varchar(250) NOT NULL,
     restaurant boolean NOT NULL,
     snackbar boolean NOT NULL,
     PRIMARY KEY (store_no),
-    FOREIGN KEY (city) REFERENCES City(city) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (state) REFERENCES City(state) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (city,state) REFERENCES City(city, state) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Childcare (
