@@ -40,6 +40,7 @@ CREATE TABLE Store (
 CREATE TABLE Childcare (
     `limit` time NULL,
     store_no integer NOT NULL,
+    UNIQUE (store_no),
     FOREIGN KEY (store_no) REFERENCES Store(store_no) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
