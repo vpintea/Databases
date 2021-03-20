@@ -24,6 +24,11 @@ CREATE TABLE City (
     PRIMARY KEY (city, state)
 );
 
+CREATE TABLE Childcare (
+    `limit` int NOT NULL,
+    PRIMARY KEY (`limit`)
+);
+
 CREATE TABLE Store (
     store_no int(255) NOT NULL,
     phone_no varchar(20) NOT NULL,
@@ -32,15 +37,10 @@ CREATE TABLE Store (
     state varchar(250) NOT NULL,
     restaurant boolean NOT NULL,
     snackbar boolean NOT NULL,
+    `limit` int NOT NULL,
     PRIMARY KEY (store_no),
-    FOREIGN KEY (city,state) REFERENCES City(city, state) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE Childcare (
-    `limit` time NULL,
-    store_no integer NOT NULL,
-    UNIQUE (store_no),
-    FOREIGN KEY (store_no) REFERENCES Store(store_no) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (city,state) REFERENCES City(city, state) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`limit`) REFERENCES Childcare(`limit`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `Date` (
