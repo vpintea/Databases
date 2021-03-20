@@ -25,7 +25,7 @@ CREATE TABLE City (
 );
 
 CREATE TABLE Store (
-    store_no integer NOT NULL,
+    store_no int(255) NOT NULL,
     phone_no varchar(20) NOT NULL,
     address varchar(250) NOT NULL,
     city varchar(250) NOT NULL,
@@ -65,37 +65,35 @@ CREATE TABLE DateAdCampaign (
   `date` date NOT NULL,
   description varchar(250) NOT NULL,
   PRIMARY KEY (`date`, description),
-  FOREIGN KEY (`date`) REFERENCES `Date` (`date`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`date`) REFERENCES `Date`(`date`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (description) REFERENCES AdCampaign (description) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Product (
-  pid INTEGER NOT NULL,
+  pid int(255) NOT NULL,
   name varchar(250) NOT NULL,
-  price DECIMAL(10,2) NOT NULL,
+  price dec(10,2) NOT NULL,
   PRIMARY KEY (pid)
 );
 
 CREATE TABLE HasDiscount (
-  `date` date, -- ALREADY NOT NULL FROM DATE TABLE
-  pid INTEGER, -- ALREADY NOT NULL FROM PRODUCT TABLE
-  discount_price DECIMAL(10,2) NOT NULL,
+  `date` date NOT NULL, 
+  pid int(255) NOT NULL, 
+  discount_price dec(10,2) NOT NULL,
   PRIMARY KEY (`date`, pid),
-  KEY `date` (`date`), -- don't think this is needed but used for fast indexing
-  KEY PID (pid),       -- don't think this is needed but used for fast indexing
   FOREIGN KEY (`date`) REFERENCES `Date`(`date`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (pid) REFERENCES Product(pid) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Sold (
-  store_no INTEGER NOT NULL,
-  `date` Date NOT NULL,
-  pid INTEGER NOT NULL,
-  quantity INTEGER NOT NULL,
+  store_no int(255) NOT NULL,
+  `date` date NOT NULL,
+  pid int(255) NOT NULL,
+  quantity int(255) NOT NULL,
+  PRIMARY KEY (store_no, `date`, pid),
   FOREIGN KEY (store_no) REFERENCES Store(store_no) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`date`) REFERENCES Date(`date`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (pid) REFERENCES Product(pid) ON DELETE CASCADE ON UPDATE CASCADE,
-  PRIMARY KEY (store_no, `date`, pid)
+  FOREIGN KEY (`date`) REFERENCES `Date`(`date`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (pid) REFERENCES Product(pid) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Category (
@@ -104,11 +102,9 @@ CREATE TABLE Category (
 );
 
 CREATE TABLE ProductCategory (
-  pid INTEGER NOT NULL,
+  pid int(255) NOT NULL,
   name varchar(250) NOT NULL,
   PRIMARY KEY (pid, name),
-  KEY PID (pid),        -- don't think this is needed but used for fast indexing
-  KEY Name (name),      -- don't think this is needed but used for fast indexing
   FOREIGN KEY (pid) REFERENCES Product(pid) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (name) REFERENCES Category(name) ON DELETE CASCADE ON UPDATE CASCADE
 );
