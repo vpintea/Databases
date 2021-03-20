@@ -37,7 +37,7 @@ CREATE TABLE Store (
     state varchar(250) NOT NULL,
     restaurant boolean NOT NULL,
     snackbar boolean NOT NULL,
-    `limit` int NOT NULL,
+    `limit` int NULL,
     PRIMARY KEY (store_no),
     FOREIGN KEY (city,state) REFERENCES City(city, state) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`limit`) REFERENCES Childcare(`limit`) ON DELETE CASCADE ON UPDATE CASCADE
