@@ -131,7 +131,12 @@ VALUES
         ('2020-06-1'),
         ('2020-06-5'),
         ('2020-06-6'),
-        ('2020-06-8');
+        ('2020-06-8'),
+        ('2020-06-10'),
+        ('2019-06-1'),
+        ('2020-02-02'),
+        ('2019-02-02')
+        ;
 
 INSERT INTO AdCampaign
 VALUE ('Special day');
@@ -146,7 +151,9 @@ VALUES
         (3, 'ultimateChair', 600),
         (4, 'comfyChair', 200),
         (5, 'ultimateDesk', 800),
-        (6, 'casualDesk', 300);
+        (6, 'casualDesk', 300),
+        (7, 'lawnChair', 100)
+        ;
 
 INSERT INTO HasDiscount
 VALUES
@@ -161,13 +168,21 @@ VALUES
        (200,'2020-06-1', 3, 1),
        (200,'2020-06-1', 6, 2),
        (200,'2020-06-8', 4, 3),
-       (300,'2020-06-5', 2, 3);
+       (300,'2020-06-5', 2, 3),
+       (100,'2020-06-10', 7, 1),
+       (200,'2019-06-1', 7, 1),
+       (100,'2020-02-02', 7, 1),
+       (400,'2019-02-02', 7, 1)
+       ;
 
 INSERT INTO Category
 VALUES
     ('RedCouch'),
     ('RedChair'),
-    ('RedDesk');
+    ('RedDesk'),
+    ('Outdoor Furniture')
+    ;
+
 
 INSERT INTO ProductCategory
 VALUES
@@ -176,7 +191,9 @@ VALUES
     (3, 'RedChair'),
     (4, 'RedChair'),
     (5, 'RedDesk'),
-    (6, 'RedDesk');
+    (6, 'RedDesk'),
+    (7, 'Outdoor Furniture')
+    ;
 
 -- Report 5
 WITH TotalNumberSold(category_name, state, total_number_sold)
