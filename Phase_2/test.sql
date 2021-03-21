@@ -395,6 +395,7 @@ ORDER BY category_name ASC;
 
 -- Report 6 revenue by population
 						
+-- Calculate retail revenue for each city
 with retail_rev as (select YEAR(Sold.date) as Year, city, state, sum(price*quantity) as retailRev
 FROM sold
 LEFT JOIN Product P on Sold.pid = P.pid
@@ -402,7 +403,7 @@ LEFT JOIN HasDiscount ON P.pid = HasDiscount.pid
 LEFT JOIN Store on Sold.store_no = Store.store_no
 where HasDiscount.date IS null
 group by city, state, year),
--- find discounted revenue by city
+-- Calculate discounted revenue for each city
 discount_rev as (select YEAR(Sold.date) as Year, city, state, sum(discount_price*quantity) as discountRev
 FROM sold
 LEFT JOIN Product P on Sold.pid = P.pid
@@ -423,13 +424,21 @@ FROM retail_rev
 JOIN discount_rev
     ON retail_rev.Year = discount_rev.Year AND
        retail_rev.city = discount_rev.city AND
-       retail_rev.state = discount_rev.state)
-Select citySize.CityPopulation, totalRev.Year, SUM(totalRev.total_rev)
+       retail_rev.state = discount_rev.state),
+
+revWithCategory as (Select citySize.CityPopulation, totalRev.Year, SUM(totalRev.total_rev) as total
     FROM citySize
     JOIN totalRev ON
         citySize.city = totalRev.city AND
         citySize.state = totalRev.state
-    GROUP BY totalRev.Year, citySize.CityPopulation
+    GROUP BY totalRev.Year, citySize.CityPopulation)
+SELECT revWithCategory.Year,
+    SUM(CASE WHEN revWithCategory.CityPopulation = 'small' THEN  total END) AS SMALL,
+    SUM(CASE WHEN revWithCategory.CityPopulation = 'medium' THEN  total END) AS MEDIUM,
+    SUM(CASE WHEN revWithCategory.CityPopulation = 'large' THEN  total END) AS LARGE,
+    SUM(CASE WHEN revWithCategory.CityPopulation = 'xlarge' THEN  total END) AS Extra_Large
+    FROM revWithCategory
+    group by revWithCategory.Year
 
 -- ################################################################################
 
