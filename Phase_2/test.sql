@@ -112,7 +112,8 @@ INSERT INTO City
 VALUES
        ('Los Angeles',	 'California',	3979576),
        ('Chicago',	 'Illinois',	2693976),
-       ('Houston',	 'Texas',	2320268);
+       ('Houston',	 'Texas',	2320268)
+       ('New York', 'New York', 9100000);
 
 INSERT INTO Childcare
 VALUES
@@ -124,7 +125,8 @@ VALUES
         (100, '','', 'Los Angeles', 'California', false, false, 30),
         (200, '','', 'Los Angeles', 'California', true, false, 45),
         (300, '','', 'Chicago',	 'Illinois', false, false, NULL),
-        (400, '','', 'Houston',	 'Texas', true, true, NULL);
+        (400, '','', 'Houston',	 'Texas', true, true, NULL)
+        (500, '','', 'New York', 'New York', true, true, NULL);
 
 INSERT INTO `Date`
 VALUES
@@ -132,11 +134,12 @@ VALUES
         ('2020-06-5'),
         ('2020-06-6'),
         ('2020-06-8'),
-        ('2020-06-10'),
+        ('2020-02-2'),
         ('2019-06-1'),
-        ('2020-02-02'),
-        ('2019-02-02')
-        ;
+        ('2019-06-5'),
+        ('2019-06-6'),
+        ('2019-06-8'),
+        ('2019-02-2');
 
 INSERT INTO AdCampaign
 VALUE ('Special day');
@@ -152,7 +155,7 @@ VALUES
         (4, 'comfyChair', 200),
         (5, 'ultimateDesk', 800),
         (6, 'casualDesk', 300),
-        (7, 'lawnChair', 100),
+        (7, 'outdoorChair', 100),
         (8, 'couchYellow', 100),
         (9, 'couchBlue', 150),
         (10, 'couchRed', 100)
@@ -174,16 +177,12 @@ VALUES
        (200,'2020-06-1', 6, 2),
        (200,'2020-06-8', 4, 3),
        (300,'2020-06-5', 2, 3),
-       (100,'2020-06-10', 7, 1),
-       (200,'2019-06-1', 7, 1),
-       (100,'2020-02-02', 7, 1),
-       (400,'2019-02-02', 7, 1),
-       (100,'2020-06-1', 8, 3),
-       (200,'2019-02-02', 8, 3),
-       (400,'2020-06-1', 9, 2),
-       (100,'2019-02-02', 9, 4),
-       (100,'2019-02-02', 10, 5)
-       ;
+       (100,'2020-02-2', 7, 1000),
+       (100,'2020-06-1', 7, 4000),
+       (100,'2020-06-5', 7, 2000),
+       (300,'2019-02-2', 7, 1000),
+       (100,'2019-06-1', 7, 1000),
+       (100,'2019-06-5', 7, 2000);
 
 INSERT INTO Category
 VALUES
@@ -191,8 +190,7 @@ VALUES
     ('RedChair'),
     ('RedDesk'),
     ('Outdoor Furniture'),
-    ('Couches and Sofas')
-    ;
+    ('Couches and Sofas');
 
 
 INSERT INTO ProductCategory
