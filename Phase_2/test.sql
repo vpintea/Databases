@@ -231,7 +231,7 @@ SELECT COUNT(DISTINCT description) as TotalUniqueCampaigns FROM AdCampaign;
 
 -- ########################################################
 
--- View/Add Holidays Form
+-- View/Add Holiday and Population Forms
 
 -- View Holidays
 SELECT holiday_name, `date` FROM Holiday;
@@ -439,14 +439,10 @@ FROM (SELECT MONTH(Sold.`date`)                                                 
                LEFT JOIN Store ON Store.store_no = Sold.store_no
       WHERE Sold.`date` > NOW() - INTERVAL 12 month) AS lala
 GROUP BY month_of_year, childcare_limit;
+
 -- ################################################################################
 
--- Report 8
-						
-SELECT ProductCategory.name as Category_name, SUM(quantity) AS Quantity_Sold
-FROM ProductCategory
-JOIN Sold S on ProductCategory.pid = S.pid
-GROUP BY Category_name;
+-- Report 8 Restaurant Impact on Category Sales
 
 -- Get SOLD with sum sales grouped by category
 with getProductCategoryInSol as (SELECT Sold.store_no,
@@ -470,10 +466,9 @@ GROUP BY getProductCategoryInSol.name, Store_type
 ORDER BY getProductCategoryInSol.name, Store_type
 						
 						
-						
-						
-						
+-- ################################################################################										
 -- Report 9
+						
 WITH ALLResult (pid, name, total_sold_during_campaign, total_sold_outside_campaign, difference) AS (
     SELECT pid,
            name,
