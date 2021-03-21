@@ -441,6 +441,14 @@ FROM (SELECT MONTH(Sold.`date`)                                                 
 GROUP BY month_of_year, childcare_limit;
 -- ################################################################################
 
+-- Report 8
+						
+SELECT ProductCategory.name as Category_name, SUM(quantity) AS Quantity_Sold
+FROM ProductCategory
+JOIN Sold S on ProductCategory.pid = S.pid
+GROUP BY Category_name;
+						
+						
 -- Report 9
 WITH ALLResult (pid, name, total_sold_during_campaign, total_sold_outside_campaign, difference) AS (
     SELECT pid,
