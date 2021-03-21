@@ -456,17 +456,18 @@ FROM Sold
 LEFT JOIN  ProductCategory ON Sold.pid = ProductCategory.pid
 GROUP BY Sold.store_no, ProductCategory.name)
 
-SELECT getProductCategoryInSol.name,
+SELECT -- getProductCategoryInSol.store_no,
+       getProductCategoryInSol.name,
 CASE
     WHEN Store.restaurant = 1 Then "Restaurant"
     WHEN Store.restaurant = 0 Then "Non-restaurant"
 END AS Store_type,
-quantity_sold
+SUM(quantity_sold)
 FROM Store
 JOIN getProductCategoryInSol
 ON Store.store_no = getProductCategoryInSol.store_no
 GROUP BY getProductCategoryInSol.name, Store_type
-ORDER BY getProductCategoryInSol.name ASC, Store_type
+ORDER BY getProductCategoryInSol.name, Store_type
 						
 						
 						
