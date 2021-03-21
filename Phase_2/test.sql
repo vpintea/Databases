@@ -310,7 +310,8 @@ FROM couchSofasProducts
 LEFT JOIN totalNumberUnitWithDiscount ON couchSofasProducts.pid = totalNumberUnitWithDiscount.PID
 LEFT JOIN totalNumberUnitWithoutDiscount ON couchSofasProducts.pid = totalNumberUnitWithoutDiscount.PID
 LEFT JOIN totalPredicted ON couchSofasProducts.pid = totalPredicted.PID
-WHERE ABS((totalNumberUnitWithDiscount.TotalPrice + totalNumberUnitWithoutDiscount.TotalPrice) - totalPredicted.TotalPredictedPrice ) > 100; -- ## to change to 5000
+WHERE ABS((totalNumberUnitWithDiscount.TotalPrice + totalNumberUnitWithoutDiscount.TotalPrice) - totalPredicted.TotalPredictedPrice ) > 100
+ORDER BY ABS((totalNumberUnitWithDiscount.TotalPrice + totalNumberUnitWithoutDiscount.TotalPrice) - totalPredicted.TotalPredictedPrice ) DESC; -- ## to change to 5000
 
 -- ################################################################################
 
