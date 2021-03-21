@@ -389,12 +389,13 @@ FROM
                  END as CityPopulation
      FROM City) as x;
 
--- Calculate retail revenue in city
-select city, state, sum(price*quantity) as retailRev from sold
-JOIN Product on Sold.pid = Product.pid
-JOIN store on Sold.store_no = Store.store_no
-JOIN HasDiscount as discount on (Product.pid != discount.pid AND sold.date != discount.date)
-GROUP BY city, state;
+-- Calculate retail revenue for each city
+select city, state, sum(price*quantity)  from sold
+JOIN Product P on Sold.pid = P.pid
+LEFT JOIN HasDiscount ON P.pid = HasDiscount.pid
+JOIN Store on Sold.store_no = Store.store_no
+where HasDiscount.date IS null
+group by city, state;
 
 -- find discounted revenue by city
 select city, state, sum(discount_price*quantity) as discountRev from sold
