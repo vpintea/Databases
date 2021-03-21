@@ -407,21 +407,27 @@ FROM
                  ELSE null
                  END as CityPopulation
      FROM City) as x;
-select * from city
+
+
 -- Calculate retail revenue for each city
-select city, state, sum(price*quantity)  from sold
+with retail_rev as (select YEAR(Sold.date) as Year,city, state, sum(price*quantity) as retailRev from sold
 JOIN Product P on Sold.pid = P.pid
 LEFT JOIN HasDiscount ON P.pid = HasDiscount.pid
 JOIN Store on Sold.store_no = Store.store_no
 where HasDiscount.date IS null
-group by city, state;
+group by city, state, year),
 
 -- find discounted revenue by city
-select city, state, sum(discount_price*quantity) as discountRev from sold
+discount_rev as (select YEAR(Sold.date) as Year, city, state, sum(discount_price*quantity) as discountRev  from sold
 JOIN Product P on Sold.pid = P.pid
 LEFT JOIN HasDiscount ON P.pid = HasDiscount.pid
 JOIN Store on Sold.store_no = Store.store_no
-group by city, state;
+group by city, state, year)
+
+select YEAR(Sold.date), City.city, City.state, (COALESCE(retail_rev.retailRev,0) + COALESCE(discount_rev.discountRev,0)) as total_rev
+from Sold
+join Store S on Sold.store_no = S.store_no
+join Store on S.city
 
 -- ################################################################################
 
