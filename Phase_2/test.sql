@@ -358,13 +358,13 @@ ORDER BY YEAR(sold.date) ASC, total_revenue DESC;
 SELECT YEAR(x.date) as Year,
 	sum(x.quantity) as TotalQuantity,
 	sum(x.quantity)/365 as AvgDailyQuantity,
-	sum(y.quantity) as GroundHogDay
+	sum(y.quant) as GroundHogDay
 FROM
-(SELECT date, quantity
+(SELECT date, quantity -- only outdoor sales
 	FROM Sold JOIN ProductCategory ON Sold.PID = ProductCategory.PID
 	WHERE ProductCategory.name = 'Outdoor Furniture') as x
-JOIN
-(SELECT date, quantity
+LEFT JOIN
+(SELECT date, quantity as quant -- only outdoor on Feb. 2
 FROM Sold JOIN ProductCategory ON Sold.PID = ProductCategory.PID
 	WHERE ProductCategory.name = 'Outdoor Furniture'
 	AND MONTH(Sold.date) = 2
