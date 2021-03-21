@@ -318,9 +318,9 @@ ORDER BY YEAR(sold.date) ASC, total_revenue DESC
 
 -- Report 4 Grounhog Day
 SELECT YEAR(x.date) as Year,
-sum(x.quantity) as TotalQuantity,
-sum(x.quantity)/365 as AvgDailyQuantity,
-sum(y.quantity) as GroundHogDay
+	sum(x.quantity) as TotalQuantity,
+	sum(x.quantity)/365 as AvgDailyQuantity,
+	sum(y.quantity) as GroundHogDay
 FROM
 (SELECT date, quantity
 	FROM Sold JOIN ProductCategory ON Sold.PID = ProductCategory.PID
