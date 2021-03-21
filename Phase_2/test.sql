@@ -291,21 +291,21 @@ WHERE HasDiscount.date IS NULL
 GROUP BY couchSofasProducts.pid, couchSofasProducts.name),
 
 -- Total predicted
-totalPredicted as (SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * couchSofasProducts.Price * 0.75) as TotalPredictedPrice, SUM(Sold.Quantity) as totalSold
+totalPredicted as (SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * couchSofasProducts.Price * 0.75) as TotalPredictedRevenue, SUM(Sold.Quantity) as totalSold
 FROM couchSofasProducts
 JOIN Sold on  couchSofasProducts.pid = Sold.pid
 GROUP BY couchSofasProducts.pid, couchSofasProducts.name)
 
 SELECT couchSofasProducts.pid, couchSofasProducts.name, couchSofasProducts.price, totalPredicted.totalSold, totalNumberUnitWithDiscount.totalSoldDiscount,
 (COALESCE(totalNumberUnitWithDiscount.total_rev,0) + totalNumberUnitWithoutDiscount.total_rev) as total_revenue,
-totalPredicted.TotalPredictedPrice,
-(totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedPrice as 'Difference Actual vs Predicted'
+totalPredicted.TotalPredictedRevenue,
+(totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue as 'Difference Actual vs Predicted'
 FROM couchSofasProducts
 LEFT JOIN totalNumberUnitWithDiscount ON couchSofasProducts.pid = totalNumberUnitWithDiscount.PID
 LEFT JOIN totalNumberUnitWithoutDiscount ON couchSofasProducts.pid = totalNumberUnitWithoutDiscount.PID
 LEFT JOIN totalPredicted ON couchSofasProducts.pid = totalPredicted.PID
-WHERE ABS((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedPrice ) > 5000
-ORDER BY ABS((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedPrice ) DESC; -- ## to change to 5000
+WHERE ABS((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue ) > 5000
+ORDER BY ABS((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue ) DESC; -- ## to change to 5000
 
 -- ################################################################################
 
