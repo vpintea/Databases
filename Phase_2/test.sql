@@ -447,6 +447,29 @@ SELECT ProductCategory.name as Category_name, SUM(quantity) AS Quantity_Sold
 FROM ProductCategory
 JOIN Sold S on ProductCategory.pid = S.pid
 GROUP BY Category_name;
+
+-- Get SOLD with sum sales grouped by category
+with getProductCategoryInSol as (SELECT Sold.store_no,
+    ProductCategory.name,
+    SUM(quantity) as quantity_sold
+FROM Sold
+LEFT JOIN  ProductCategory ON Sold.pid = ProductCategory.pid
+GROUP BY Sold.store_no, ProductCategory.name)
+
+SELECT getProductCategoryInSol.name,
+CASE
+    WHEN Store.restaurant = 1 Then "Restaurant"
+    WHEN Store.restaurant = 0 Then "Non-restaurant"
+END AS Store_type,
+quantity_sold
+FROM Store
+JOIN getProductCategoryInSol
+ON Store.store_no = getProductCategoryInSol.store_no
+GROUP BY getProductCategoryInSol.name, Store_type
+ORDER BY getProductCategoryInSol.name ASC, Store_type
+						
+						
+						
 						
 						
 -- Report 9
