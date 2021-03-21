@@ -207,6 +207,13 @@ VALUES
     (10, 'Couches and Sofas')
     ;
 
+INSERT INTO Holiday
+VALUES
+    ('christmas', '2020-12-25'),
+    ('Easter', '2020-04-12'),
+    ('New Years Eve', '2020-12-31')
+    ;
+
 -- ################################################################################
 
 -- Main Menu
@@ -226,6 +233,15 @@ SELECT COUNT(*) as TotalProducts FROM Product;
 
 -- Count and display total of distinct AD_CAMPAIGNs
 SELECT COUNT(DISTINCT description) as TotalUniqueCampaigns FROM AdCampaign;
+
+-- View Holidays
+SELECT holiday_name, `date` FROM Holiday;
+
+-- Add Holiday
+INSERT INTO Holiday VALUES ($holiday_name,$date);
+
+-- Update Population
+UPDATE City SET population = 'updated_population' WHERE city = 'city';
 
 -- ################################################################################
 
