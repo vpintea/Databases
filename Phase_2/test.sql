@@ -423,7 +423,20 @@ group by city, state;
 -- TODO calc discount revenue
 -- TODO flow total revenue through population category						
 						
--- ################################################################################						
+-- ################################################################################
+						
+-- Report 7
+SELECT month_of_year, childcare_limit, SUM(total_amount) AS total_sales
+FROM (SELECT MONTH(Sold.`date`)                                                  AS month_of_year,
+             IFNULL(Store.`limit`, 0)                                            AS childcare_limit,
+             Sold.quantity * IFNULL(HasDiscount.discount_price, Product.price)   AS total_amount
+      FROM Sold
+               LEFT JOIN Product ON Product.pid = Sold.pid
+               LEFT JOIN HasDiscount ON HasDiscount.pid = Sold.pid AND HasDiscount.`date` = Sold.`date`
+               LEFT JOIN Store ON Store.store_no = Sold.store_no
+      WHERE Sold.`date` > NOW() - INTERVAL 12 month) AS lala
+GROUP BY month_of_year, childcare_limit;
+-- ################################################################################
 						
 -- Report 9
 WITH ALLResult (pid, name, total_sold_during_campaign, total_sold_outside_campaign, difference) AS (
