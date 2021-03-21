@@ -407,7 +407,7 @@ FROM
                  ELSE null
                  END as CityPopulation
      FROM City) as x;
-
+select * from city
 -- Calculate retail revenue for each city
 select city, state, sum(price*quantity)  from sold
 JOIN Product P on Sold.pid = P.pid
@@ -422,9 +422,6 @@ JOIN Product P on Sold.pid = P.pid
 LEFT JOIN HasDiscount ON P.pid = HasDiscount.pid
 JOIN Store on Sold.store_no = Store.store_no
 group by city, state;
-
--- TODO calc discount revenue
--- TODO flow total revenue through population category
 
 -- ################################################################################
 
