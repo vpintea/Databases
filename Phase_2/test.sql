@@ -266,9 +266,9 @@ SORT  Category.name ASC
 
 -- ################################################################################
 
---------  Report 2 ----------
+--  Report 2 ----------
 
---- View Actual vs Predicted Revenue for Couches and Sofas (Report 2)
+-- View Actual vs Predicted Revenue for Couches and Sofas (Report 2)
 
 -- Gets Couches and Sofas
 with couchSofasProducts as (SELECT Product.pid, Product.price,  Product.name -- assuming there is only one combination product price
@@ -310,7 +310,7 @@ FROM couchSofasProducts
 LEFT JOIN totalNumberUnitWithDiscount ON couchSofasProducts.pid = totalNumberUnitWithDiscount.PID
 LEFT JOIN totalNumberUnitWithoutDiscount ON couchSofasProducts.pid = totalNumberUnitWithoutDiscount.PID
 LEFT JOIN totalPredicted ON couchSofasProducts.pid = totalPredicted.PID
-WHERE ABS('Difference Actual vs Predicted') > 100 -- to change
+WHERE ABS((totalNumberUnitWithDiscount.TotalPrice + totalNumberUnitWithoutDiscount.TotalPrice) - totalPredicted.TotalPredictedPrice ) > 100; -- ## to change to 5000
 
 -- ################################################################################
 
