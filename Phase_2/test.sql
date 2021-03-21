@@ -272,7 +272,7 @@ ON Product.pid = ProductCategory.pid
 WHERE ProductCategory.name = 'Couches and sofas'),
 
 -- Total sum of price of units sold at discount
-totalNumberUnitWithDiscount as (SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * HasDiscount.discount_price) as TotalPrice, SUM(Sold.quantity) as totalSoldDiscount
+totalNumberUnitWithDiscount as (SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * HasDiscount.discount_price) as total_rev, SUM(Sold.quantity) as totalSoldDiscount
 FROM couchSofasProducts
 JOIN Sold on  couchSofasProducts.pid = Sold.pid
 JOIN HasDiscount on HasDiscount.pid = couchSofasProducts.pid
@@ -282,7 +282,7 @@ GROUP BY couchSofasProducts.pid, couchSofasProducts.name),
 
 -- Total sum of price of units sold without discount
 totalNumberUnitWithoutDiscount as (
-SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * couchSofasProducts.Price) as TotalPrice
+SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * couchSofasProducts.Price) as total_rev
 FROM couchSofasProducts
 JOIN Sold on  couchSofasProducts.pid = Sold.pid
 LEFT JOIN HasDiscount on HasDiscount.pid = couchSofasProducts.pid
@@ -297,15 +297,15 @@ JOIN Sold on  couchSofasProducts.pid = Sold.pid
 GROUP BY couchSofasProducts.pid, couchSofasProducts.name)
 
 SELECT couchSofasProducts.pid, couchSofasProducts.name, couchSofasProducts.price, totalPredicted.totalSold, totalNumberUnitWithDiscount.totalSoldDiscount,
-(COALESCE(totalNumberUnitWithDiscount.TotalPrice,0) + totalNumberUnitWithoutDiscount.TotalPrice) as TotalRevenue,
+(COALESCE(totalNumberUnitWithDiscount.total_rev,0) + totalNumberUnitWithoutDiscount.total_rev) as total_revenue,
 totalPredicted.TotalPredictedPrice,
-(totalNumberUnitWithDiscount.TotalPrice + totalNumberUnitWithoutDiscount.TotalPrice) - totalPredicted.TotalPredictedPrice as 'Difference Actual vs Predicted'
+(totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedPrice as 'Difference Actual vs Predicted'
 FROM couchSofasProducts
 LEFT JOIN totalNumberUnitWithDiscount ON couchSofasProducts.pid = totalNumberUnitWithDiscount.PID
 LEFT JOIN totalNumberUnitWithoutDiscount ON couchSofasProducts.pid = totalNumberUnitWithoutDiscount.PID
 LEFT JOIN totalPredicted ON couchSofasProducts.pid = totalPredicted.PID
-WHERE ABS((totalNumberUnitWithDiscount.TotalPrice + totalNumberUnitWithoutDiscount.TotalPrice) - totalPredicted.TotalPredictedPrice ) > 100
-ORDER BY ABS((totalNumberUnitWithDiscount.TotalPrice + totalNumberUnitWithoutDiscount.TotalPrice) - totalPredicted.TotalPredictedPrice ) DESC; -- ## to change to 5000
+WHERE ABS((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedPrice ) > 5000
+ORDER BY ABS((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedPrice ) DESC; -- ## to change to 5000
 
 -- ################################################################################
 
