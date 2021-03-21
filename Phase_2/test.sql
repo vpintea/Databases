@@ -112,7 +112,7 @@ INSERT INTO City
 VALUES
        ('Los Angeles',	 'California',	3979576),
        ('Chicago',	 'Illinois',	2693976),
-       ('Houston',	 'Texas',	2320268)
+       ('Houston',	 'Texas',	2320268),
        ('New York', 'New York', 9100000);
 
 INSERT INTO Childcare
@@ -125,7 +125,7 @@ VALUES
         (100, '','', 'Los Angeles', 'California', false, false, 30),
         (200, '','', 'Los Angeles', 'California', true, false, 45),
         (300, '','', 'Chicago',	 'Illinois', false, false, NULL),
-        (400, '','', 'Houston',	 'Texas', true, true, NULL)
+        (400, '','', 'Houston',	 'Texas', true, true, NULL),
         (500, '','', 'New York', 'New York', true, true, NULL);
 
 INSERT INTO `Date`
@@ -139,9 +139,6 @@ VALUES
         ('2019-06-5'),
         ('2019-06-6'),
         ('2019-06-8'),
-	('2020-12-25'),
-        ('2020-04-12'),
-        ('2020-12-31'),
         ('2019-02-2');
 
 INSERT INTO AdCampaign
