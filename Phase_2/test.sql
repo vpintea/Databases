@@ -152,7 +152,10 @@ VALUES
         (4, 'comfyChair', 200),
         (5, 'ultimateDesk', 800),
         (6, 'casualDesk', 300),
-        (7, 'lawnChair', 100)
+        (7, 'lawnChair', 100),
+        (8, 'couchYellow', 100),
+        (9, 'couchBlue', 150),
+        (10, 'couchRed', 100)
         ;
 
 INSERT INTO HasDiscount
@@ -180,7 +183,8 @@ VALUES
     ('RedCouch'),
     ('RedChair'),
     ('RedDesk'),
-    ('Outdoor Furniture')
+    ('Outdoor Furniture'),
+    ('Couches and Sofas')
     ;
 
 
@@ -192,7 +196,10 @@ VALUES
     (4, 'RedChair'),
     (5, 'RedDesk'),
     (6, 'RedDesk'),
-    (7, 'Outdoor Furniture')
+    (7, 'Outdoor Furniture'),
+    (8, 'Couches and Sofas'),
+    (9, 'Couches and Sofas'),
+    (10, 'Couches and Sofas')
     ;
 
 -- Report 5
