@@ -140,7 +140,7 @@ VALUES
         ('2019-06-6'),
         ('2019-06-8'),
         ('2019-02-2'),
-	('2020-12-25'),
+	    ('2020-12-25'),
         ('2020-04-12'),
         ('2020-12-31');
 
@@ -241,7 +241,7 @@ SELECT COUNT(DISTINCT description) as TotalUniqueCampaigns FROM AdCampaign;
 SELECT holiday_name, `date` FROM Holiday;
 
 -- Add Holiday
-INSERT INTO Holiday VALUES ($holiday_name,$date);
+INSERT INTO Holiday VALUES ('Happy Day','2020-06-01');
 
 -- Update Population
 UPDATE City SET population = 'updated_population' WHERE city = 'city';
@@ -260,7 +260,7 @@ FROM ProductCategory
 LEFT JOIN Product
 ON Product.pid = productCategory.pid
 GROUP BY ProductCategory.name
-SORT  ProductCategory.name ASC
+ORDER BY ProductCategory.name ASC;
 
 -- ################################################################################
 
@@ -333,7 +333,7 @@ revenueDiscount as (
 ),
 
 -- Gets the revenue at discount and sales at discount per store
-revenueRetail as ( 
+revenueRetail as (
   SELECT storesInState.store_no, SUM(Sold.quantity * Product.Price) as revenue,  YEAR(sold.date) as year_sold
   FROM Sold
   JOIN storesInState ON storesInState.store_no = SOLD.store_no
@@ -353,7 +353,7 @@ GROUP BY storesInState.store_no, storesInState.address, storesInState.city, YEAR
 ORDER BY YEAR(sold.date) ASC, total_revenue DESC
 
 -- ################################################################################
-						
+
 -- Report 4 Grounhog Day
 SELECT YEAR(x.date) as Year,
 	sum(x.quantity) as TotalQuantity,
@@ -372,9 +372,9 @@ FROM Sold JOIN ProductCategory ON Sold.PID = ProductCategory.PID
 ON x.date = y.date
 GROUP BY YEAR
 ORDER BY YEAR;
-                                                
+
 -- ################################################################################
-						
+
 -- Report 5
 WITH TotalNumberSold(category_name, state, total_number_sold)
          AS (SELECT category_name, state, SUM(quantity) AS total_number_sold
@@ -394,7 +394,7 @@ FROM (SELECT category_name, MAX(total_number_sold) AS max_total_number_sold
 ORDER BY category_name ASC;
 
 -- ################################################################################
-						
+
 -- Report 6 revenue by population
 SELECT *
 FROM
@@ -421,13 +421,13 @@ select city, state, sum(discount_price*quantity) as discountRev from sold
 JOIN Product P on Sold.pid = P.pid
 LEFT JOIN HasDiscount ON P.pid = HasDiscount.pid
 JOIN Store on Sold.store_no = Store.store_no
-group by city, state;					
-						
+group by city, state;
+
 -- TODO calc discount revenue
--- TODO flow total revenue through population category						
-						
+-- TODO flow total revenue through population category
+
 -- ################################################################################
-						
+
 -- Report 7
 SELECT month_of_year, childcare_limit, SUM(total_amount) AS total_sales
 FROM (SELECT MONTH(Sold.`date`)                                                  AS month_of_year,
@@ -440,7 +440,7 @@ FROM (SELECT MONTH(Sold.`date`)                                                 
       WHERE Sold.`date` > NOW() - INTERVAL 12 month) AS lala
 GROUP BY month_of_year, childcare_limit;
 -- ################################################################################
-						
+
 -- Report 9
 WITH ALLResult (pid, name, total_sold_during_campaign, total_sold_outside_campaign, difference) AS (
     SELECT pid,
@@ -469,7 +469,6 @@ UNION
        ORDER BY difference ASC
        limit 10) AS lalala
  ORDER BY difference DESC);
-
 
 
 
