@@ -251,16 +251,18 @@ UPDATE City SET population = 'updated_population' WHERE city = 'city';
 -------- Report 1 ----------
 
 -- number of products per category
-SELECT  ProductCategory.name as 'Category Name',
+SELECT  Category.name as 'Category Name',
 count(Product.pid) as 'Total Number of Products',
 min(Product.price) as 'Minimum Regular Retail Price',
 avg(Product.price) as 'Average Regular Retail Price',
 max(Product.price) as 'Maximum Regular Retail Price'
-FROM ProductCategory
+FROM 
+Category 
+LEFT JOIN ProductCategory ON  Category.name = productCategory.name
 LEFT JOIN Product
 ON Product.pid = productCategory.pid
-GROUP BY ProductCategory.name
-ORDER BY ProductCategory.name ASC;
+GROUP BY Category.name
+SORT  Category.name ASC
 
 -- ################################################################################
 
