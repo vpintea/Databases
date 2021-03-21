@@ -163,7 +163,6 @@ VALUES
 INSERT INTO HasDiscount
 VALUES
         ('2020-06-1', 1, 800),
-        ('2020-06-5', 3, 300),
         ('2019-02-02', 9, 50)
         ;
 
@@ -380,7 +379,7 @@ WITH TotalNumberSold(category_name, state, total_number_sold)
                    FROM ProductCategory
                             JOIN Sold ON ProductCategory.pid = Sold.pid
                             JOIN Store ON Store.store_no = Sold.store_no
-                   WHERE MONTH (Sold.`date`) = 06 AND YEAR (Sold.`date`) = 2020) AS lala
+                   WHERE MONTH (Sold.`date`) = 06 AND YEAR (Sold.`date`) = 2020) AS ProductsSoldPerCategory
              GROUP BY category_name, state
     )
 SELECT TotalNumberSold.category_name, TotalNumberSold.state, TotalNumberSold.total_number_sold
@@ -451,7 +450,7 @@ FROM (SELECT MONTH(Sold.`date`)                                                 
                LEFT JOIN Product ON Product.pid = Sold.pid
                LEFT JOIN HasDiscount ON HasDiscount.pid = Sold.pid AND HasDiscount.`date` = Sold.`date`
                LEFT JOIN Store ON Store.store_no = Sold.store_no
-      WHERE Sold.`date` > NOW() - INTERVAL 12 month) AS lala
+      WHERE Sold.`date` > NOW() - INTERVAL 12 month) AS SalesPerChildcareLimit
 GROUP BY month_of_year, childcare_limit;
 
 -- ################################################################################
@@ -482,7 +481,6 @@ ORDER BY getProductCategoryInSol.name, Store_type
 						
 -- ################################################################################										
 -- Report 9
-						
 WITH ALLResult (pid, name, total_sold_during_campaign, total_sold_outside_campaign, difference) AS (
     SELECT pid,
            name,
@@ -495,8 +493,9 @@ WITH ALLResult (pid, name, total_sold_during_campaign, total_sold_outside_campai
                  IF(DateAdCampaign.description IS NULL, Sold.quantity, 0)     AS sold_outside_campaign
           FROM Product
                    JOIN HasDiscount ON Product.pid = HasDiscount.pid
+                   LEFT JOIN Sold ON Product.pid = Sold.pid AND HasDiscount.`date` = Sold.`date`
                    LEFT JOIN DateAdCampaign ON HasDiscount.`date` = DateAdCampaign.`date`
-                   LEFT JOIN Sold ON Product.pid = Sold.pid AND HasDiscount.`date` = Sold.`date`) AS lala
+                   ) AS ProductsWithDiscountSalesSummary
     GROUP BY pid, name
 )
     (SELECT *
@@ -508,7 +507,7 @@ UNION
  FROM (SELECT *
        FROM ALLResult
        ORDER BY difference ASC
-       limit 10) AS lalala
+       limit 10) AS ProductResultsOrdered
  ORDER BY difference DESC);
 
 
