@@ -209,6 +209,116 @@ VALUES
     (10, 'Couches and Sofas')
     ;
 
+
+
+-------- Report 1 ----------
+
+-- number of products per category
+SELECT  ProductCategory.name as 'Category Name',
+count(Product.pid) as 'Total Number of Products',
+min(Product.price) as 'Minimum Regular Retail Price',
+avg(Product.price) as 'Average Regular Retail Price',
+max(Product.price) as 'Maximum Regular Retail Price'
+FROM ProductCategory
+LEFT JOIN Product
+ON Product.pid = productCategory.pid
+GROUP BY ProductCategory.name
+SORT  ProductCategory.name ASC
+
+
+
+--------  Report 2 ----------
+
+--- View Actual vs Predicted Revenue for Couches and Sofas (Report 2)
+
+-- Gets Couches and Sofas
+with couchSofasProducts as (SELECT Product.pid, Product.price,  Product.name -- assuming there is only one combination product price
+FROM Product
+JOIN ProductCategory
+ON Product.pid = ProductCategory.pid
+WHERE ProductCategory.name = 'Couches and sofas'),
+
+-- Total sum of price of units sold at discount
+totalNumberUnitWithDiscount as (SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * HasDiscount.discount_price) as TotalPrice, SUM(Sold.quantity) as totalSoldDiscount
+FROM couchSofasProducts
+JOIN Sold on  couchSofasProducts.pid = Sold.pid
+JOIN HasDiscount on HasDiscount.pid = couchSofasProducts.pid
+AND Sold.Date = HasDiscount.date
+WHERE HasDiscount.date IS NOT NULL
+GROUP BY couchSofasProducts.pid, couchSofasProducts.name),
+
+-- Total sum of price of units sold without discount
+totalNumberUnitWithoutDiscount as (
+SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * couchSofasProducts.Price) as TotalPrice
+FROM couchSofasProducts
+JOIN Sold on  couchSofasProducts.pid = Sold.pid
+LEFT JOIN HasDiscount on HasDiscount.pid = couchSofasProducts.pid
+AND Sold.Date = HasDiscount.date
+WHERE HasDiscount.date IS NULL
+GROUP BY couchSofasProducts.pid, couchSofasProducts.name),
+
+-- Total predicted
+totalPredicted as (SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * couchSofasProducts.Price * 0.75) as TotalPredictedPrice, SUM(Sold.Quantity) as totalSold
+FROM couchSofasProducts
+JOIN Sold on  couchSofasProducts.pid = Sold.pid
+GROUP BY couchSofasProducts.pid, couchSofasProducts.name)
+
+SELECT couchSofasProducts.pid, couchSofasProducts.name, couchSofasProducts.price, totalPredicted.totalSold, totalNumberUnitWithDiscount.totalSoldDiscount,
+(COALESCE(totalNumberUnitWithDiscount.TotalPrice,0) + totalNumberUnitWithoutDiscount.TotalPrice) as TotalRevenue,
+totalPredicted.TotalPredictedPrice,
+(totalNumberUnitWithDiscount.TotalPrice + totalNumberUnitWithoutDiscount.TotalPrice) - totalPredicted.TotalPredictedPrice as 'Difference Actual vs Predicted'
+FROM couchSofasProducts
+LEFT JOIN totalNumberUnitWithDiscount ON couchSofasProducts.pid = totalNumberUnitWithDiscount.PID
+LEFT JOIN totalNumberUnitWithoutDiscount ON couchSofasProducts.pid = totalNumberUnitWithoutDiscount.PID
+LEFT JOIN totalPredicted ON couchSofasProducts.pid = totalPredicted.PID
+WHERE ABS('Difference Actual vs Predicted') > 100 -- to change
+
+
+
+
+
+--------- Report 3 -------
+-- Gets all the stores in a state
+with storesInState as (SELECT City.city, Store.store_no, Store.address, Store.State
+FROM City
+JOIN Store on (City.city = Store.city and City.state = Store.state)
+WHERE
+City.State = 'California'
+),
+
+-- Gets the revenue at discount and sales at discount per store
+revenueDiscount as (
+  SELECT storesInState.store_no, SUM(Sold.quantity * HasDiscount.discount_price) as revenue,  YEAR(sold.date) as year_sold
+  FROM Sold
+  JOIN storesInState ON storesInState.store_no = SOLD.store_no
+  JOIN HasDiscount on HasDiscount.pid = SOLD.pid AND Sold.Date = HasDiscount.date
+  JOIN Product on Product.pid = Sold.pid
+  WHERE HasDiscount.date IS NOT NULL
+  GROUP BY YEAR(sold.date), storesInState.store_no
+),
+
+-- Gets the revenue at discount and sales at discount per store
+revenueRetail as ( 
+  SELECT storesInState.store_no, SUM(Sold.quantity * Product.Price) as revenue,  YEAR(sold.date) as year_sold
+  FROM Sold
+  JOIN storesInState ON storesInState.store_no = SOLD.store_no
+  LEFT JOIN HasDiscount on HasDiscount.pid = SOLD.pid AND Sold.Date = HasDiscount.date
+  JOIN Product on Product.pid = Sold.pid
+  WHERE HasDiscount.date IS NULL
+  GROUP BY YEAR(sold.date), storesInState.store_no)
+
+SELECT storesInState.store_no, storesInState.address, storesInState.city,
+YEAR(sold.date), -- need to join with sold in case there is year with only discount sales or only regular sales
+(COALESCE(revenueDiscount.revenue,0) + COALESCE(revenueRetail.revenue,0)) as total_revenue
+FROM storesInState
+LEFT JOIN sold ON storesInState.store_no = SOLD.store_no
+LEFT JOIN revenueDiscount ON (storesInState.store_no = revenueDiscount.store_no AND YEAR(sold.date) = revenueDiscount.year_sold)
+LEFT JOIN revenueRetail ON (storesInState.store_no = revenueRetail.store_no AND YEAR(sold.date) = revenueRetail.year_sold)
+GROUP BY storesInState.store_no, storesInState.address, storesInState.city, YEAR(sold.date), total_revenue
+ORDER BY YEAR(sold.date) ASC, total_revenue DESC
+
+
+
 -- Report 5
 WITH TotalNumberSold(category_name, state, total_number_sold)
          AS (SELECT category_name, state, SUM(quantity) AS total_number_sold
