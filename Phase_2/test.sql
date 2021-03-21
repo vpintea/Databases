@@ -207,7 +207,27 @@ VALUES
     (10, 'Couches and Sofas')
     ;
 
+-- ################################################################################
 
+-- Main Menu
+-- Count and display total of STORE instances
+SELECT COUNT(*) as TotalStores FROM Store;
+
+-- Count and display total of STORE instances that have FOOD_SERVICE
+SELECT COUNT(*) as TotalNumberRestaurants FROM Store
+WHERE restaurant = True OR snackbar = True;
+
+-- Count and display total of STORE that Offers Childcare
+SELECT COUNT(*) as TotalStoresOfferChildcare FROM Store
+WHERE `limit` IS NOT NULL;
+
+-- Count and display all PRODUCT instances
+SELECT COUNT(*) as TotalProducts FROM Product;
+
+-- Count and display total of distinct AD_CAMPAIGNs
+SELECT COUNT(DISTINCT description) as TotalUniqueCampaigns FROM AdCampaign;
+
+-- ################################################################################
 
 -------- Report 1 ----------
 
@@ -223,7 +243,7 @@ ON Product.pid = productCategory.pid
 GROUP BY ProductCategory.name
 SORT  ProductCategory.name ASC
 
-
+-- ################################################################################
 
 --------  Report 2 ----------
 
@@ -271,9 +291,7 @@ LEFT JOIN totalNumberUnitWithoutDiscount ON couchSofasProducts.pid = totalNumber
 LEFT JOIN totalPredicted ON couchSofasProducts.pid = totalPredicted.PID
 WHERE ABS('Difference Actual vs Predicted') > 100 -- to change
 
-
-
-
+-- ################################################################################
 
 --------- Report 3 -------
 -- Gets all the stores in a state
@@ -315,7 +333,8 @@ LEFT JOIN revenueRetail ON (storesInState.store_no = revenueRetail.store_no AND 
 GROUP BY storesInState.store_no, storesInState.address, storesInState.city, YEAR(sold.date), total_revenue
 ORDER BY YEAR(sold.date) ASC, total_revenue DESC
 
-
+-- ################################################################################
+						
 -- Report 4 Grounhog Day
 SELECT YEAR(x.date) as Year,
 	sum(x.quantity) as TotalQuantity,
@@ -335,7 +354,8 @@ ON x.date = y.date
 GROUP BY YEAR
 ORDER BY YEAR;
                                                 
-
+-- ################################################################################
+						
 -- Report 5
 WITH TotalNumberSold(category_name, state, total_number_sold)
          AS (SELECT category_name, state, SUM(quantity) AS total_number_sold
@@ -354,6 +374,24 @@ FROM (SELECT category_name, MAX(total_number_sold) AS max_total_number_sold
     AND TotalNumberSoldPerCategory.max_total_number_sold = TotalNumberSold.total_number_sold
 ORDER BY category_name ASC;
 
+-- ################################################################################
+						
+-- Report 6 revenue by population
+SELECT 'small' as SmallPop, 'medium' as MedPop, 'large' as LargePop, 'XLarge' as XLargePop
+-- Calculate city population categories
+FROM
+     (SELECT City.population as pop,
+             CASE
+                 WHEN (City.population < 3700000) THEN 'small'
+                 WHEN (City.population BETWEEN 3700000 AND 6699999) THEN 'medium'
+                 WHEN (city.population BETWEEN 6700000 AND 8999999) THEN 'large'
+                 WHEN (City.population >= 9000000) THEN 'Xlarge'
+                 ELSE null
+                 END as CityPopulation
+     FROM City) as x;						
+
+-- ################################################################################						
+						
 -- Report 9
 WITH ALLResult (pid, name, total_sold_during_campaign, total_sold_outside_campaign, difference) AS (
     SELECT pid,
