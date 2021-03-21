@@ -398,10 +398,10 @@ GROUP BY city, state;
 
 -- find discounted revenue by city
 select city, state, sum(discount_price*quantity) as discountRev from sold
-JOIN Product ON Sold.pid = Product.pid
-JOIN HasDiscount as discount on Product.pid = discount.pid
+JOIN Product P on Sold.pid = P.pid
+LEFT JOIN HasDiscount ON P.pid = HasDiscount.pid
 JOIN Store on Sold.store_no = Store.store_no
-group by city, state;						
+group by city, state;					
 						
 -- TODO calc discount revenue
 -- TODO flow total revenue through population category						
