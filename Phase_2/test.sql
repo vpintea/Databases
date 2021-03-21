@@ -161,7 +161,9 @@ VALUES
 INSERT INTO HasDiscount
 VALUES
         ('2020-06-1', 1, 800),
-        ('2020-06-5', 3, 300);
+        ('2020-06-5', 3, 300),
+        ('2020-02-02', 9, 50)
+        ;
 
 INSERT INTO Sold
 VALUES
