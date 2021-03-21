@@ -377,10 +377,9 @@ ORDER BY category_name ASC;
 -- ################################################################################
 						
 -- Report 6 revenue by population
-SELECT 'small' as SmallPop, 'medium' as MedPop, 'large' as LargePop, 'XLarge' as XLargePop
--- Calculate city population categories
+SELECT *
 FROM
-     (SELECT City.population as pop,
+     (SELECT City.population as pop, -- Calculate city population categories
              CASE
                  WHEN (City.population < 3700000) THEN 'small'
                  WHEN (City.population BETWEEN 3700000 AND 6699999) THEN 'medium'
@@ -388,8 +387,17 @@ FROM
                  WHEN (City.population >= 9000000) THEN 'Xlarge'
                  ELSE null
                  END as CityPopulation
-     FROM City) as x;						
+     FROM City) as x;
 
+-- Calculate total retail revenue in city
+select city, state, sum(price*quantity) as retailRev from sold
+JOIN store on Sold.store_no = Store.store_no
+JOIN Product on Sold.pid = Product.pid
+GROUP BY city, state;
+
+-- TODO calc discount revenue
+-- TODO flow total revenue through population category						
+						
 -- ################################################################################						
 						
 -- Report 9
