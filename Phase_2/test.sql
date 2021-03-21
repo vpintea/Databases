@@ -316,6 +316,25 @@ GROUP BY storesInState.store_no, storesInState.address, storesInState.city, YEAR
 ORDER BY YEAR(sold.date) ASC, total_revenue DESC
 
 
+-- Report 4 Grounhog Day
+SELECT YEAR(x.date) as Year,
+sum(x.quantity) as TotalQuantity,
+sum(x.quantity)/365 as AvgDailyQuantity,
+sum(y.quantity) as GroundHogDay
+FROM
+(SELECT date, quantity
+	FROM Sold JOIN ProductCategory ON Sold.PID = ProductCategory.PID
+	WHERE ProductCategory.name = 'Outdoor Furniture') as x
+JOIN
+(SELECT date, quantity
+FROM Sold JOIN ProductCategory ON Sold.PID = ProductCategory.PID
+	WHERE ProductCategory.name = 'Outdoor Furniture'
+	AND MONTH(Sold.date) = 2
+	AND DAY(Sold.date) = 2) as y
+ON x.date = y.date
+GROUP BY YEAR
+ORDER BY YEAR;
+                                                
 
 -- Report 5
 WITH TotalNumberSold(category_name, state, total_number_sold)
