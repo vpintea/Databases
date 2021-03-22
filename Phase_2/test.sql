@@ -368,7 +368,7 @@ FROM Sold JOIN ProductCategory ON Sold.PID = ProductCategory.PID
 	AND DAY(Sold.date) = 2) as y
 ON x.date = y.date
 GROUP BY YEAR
-ORDER BY YEAR;
+ORDER BY YEAR ASC;
 
 -- ################################################################################
 
