@@ -11,13 +11,13 @@ include('lib/init.php'); ?>
   <input type="submit" name="submit" value="Submit">
 </form>
 
+<br>
 <a href="main_menu.php">Back to Main Menu</a>
-    
-<?php 
 
-if (isset($_POST['submit'])) 
-{
-  $sql ="WITH TotalNumberSold(category_name, state, total_number_sold)
+<?php if (isset($_POST['submit'])) { ?>
+  <h2>Results</h2>
+
+  <?php $sql ="WITH TotalNumberSold(category_name, state, total_number_sold)
   AS (SELECT category_name, state, SUM(quantity) AS total_number_sold
       FROM (SELECT name AS category_name, state, quantity
             FROM ProductCategory
@@ -45,14 +45,14 @@ $result = mysqli_query($conn, $sql);
   //   echo "0 results";
   // }
 
-  echo '<table border="0" cellspacing="2" cellpadding="2"> 
-      <tr> 
-          <td> Category Name </td> 
-          <td> State </td> 
-          <td> Total Number Sold </td> 
-      </tr>';
-
       if ($row = mysqli_fetch_assoc($result)) {
+        echo '<table border="1" cellspacing="2" cellpadding="2"> 
+        <tr> 
+            <td> Category Name </td> 
+            <td> State </td> 
+            <td> Total Number Sold </td> 
+        </tr>';
+
         while ($row = $result->fetch_assoc()) {
             $category_name = $row["category_name"];
             $state = $row["state"];
@@ -66,6 +66,9 @@ $result = mysqli_query($conn, $sql);
         }
     
         $result->free();
+      }
+      else {
+        echo "Error";
       }
 
 };
