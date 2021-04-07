@@ -1,7 +1,7 @@
 <?php include "lib/header.php";
 include('lib/init.php'); ?>
 
-<h2>Select month and State</h2>
+<h2>State with Highest Volume for each Category Report</h2>
 
 <form method="post">
   <label for="month">Month</label>
@@ -45,7 +45,7 @@ $result = mysqli_query($conn, $sql);
   //   echo "0 results";
   // }
 
-      if ($row = mysqli_fetch_assoc($result)) {
+      if(mysqli_num_rows($result) > 0){
         echo '<table border="1" cellspacing="2" cellpadding="2"> 
         <tr> 
             <td> Category Name </td> 
