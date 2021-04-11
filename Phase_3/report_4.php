@@ -29,15 +29,6 @@ ON x.date = y.date GROUP BY YEAR ORDER BY YEAR ASC" ;
   
 $result = mysqli_query($conn, $sql);
 
-  // if (mysqli_num_rows($result) > 0) {
-  //   // output data of each row
-  //   while($row = mysqli_fetch_assoc($result)) {
-  //     echo "CategoryName: " . $row["category_name"]. " - State: ". $row["state"]. " - TotalNumberSold: ". $row["total_number_sold"]. "<br>";
-  //   }
-  // } else {
-  //   echo "0 results";
-  // }
-
       if(mysqli_num_rows($result) > 0){
         echo '<table border="1" cellspacing="2" cellpadding="2"> 
         <tr> 
