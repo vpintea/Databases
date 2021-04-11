@@ -1,7 +1,6 @@
 <?php include "lib/header.php";
 include('lib/init.php'); ?>
 
-<br>
 <a href="main_menu.php">Back to Main Menu</a>
 
 <h2>Advertising Campaign Analysis Report</h2>
@@ -73,3 +72,4 @@ include('lib/init.php'); ?>
       };
    
 ?>
+<?php include "lib/footer.php"; ?>

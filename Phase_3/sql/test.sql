@@ -452,6 +452,23 @@ FROM (SELECT MONTH(Sold.`date`)                                                 
                LEFT JOIN Store ON Store.store_no = Sold.store_no
       WHERE Sold.`date` > NOW() - INTERVAL 12 month) AS SalesPerChildcareLimit
 GROUP BY month_of_year, childcare_limit;
+-- Improved 
+WITH original AS (SELECT month_of_year, childcare_limit, SUM(total_amount) AS total_sales
+FROM (SELECT MONTH(Sold.`date`)                                                  AS month_of_year,
+             IFNULL(Store.`limit`, 0)                                            AS childcare_limit,
+             Sold.quantity * IFNULL(HasDiscount.discount_price, Product.price)   AS total_amount
+      FROM Sold
+               LEFT JOIN Product ON Product.pid = Sold.pid
+               LEFT JOIN HasDiscount ON HasDiscount.pid = Sold.pid AND HasDiscount.`date` = Sold.`date`
+               LEFT JOIN Store ON Store.store_no = Sold.store_no
+      WHERE Sold.`date` > NOW() - INTERVAL 12 month) AS SalesPerChildcareLimit
+GROUP BY month_of_year, childcare_limit),
+extended AS (SELECT month_of_year,
+             CASE WHEN childcare_limit = 30 THEN total_sales END AS `30`,
+             CASE WHEN childcare_limit = 45 THEN total_sales END AS `45` FROM original)
+SELECT month_of_year, SUM(`30`) AS `30`, SUM(`45`) AS `45`
+FROM extended
+GROUP BY month_of_year
 
 -- ################################################################################
 
