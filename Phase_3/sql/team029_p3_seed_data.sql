@@ -91,7 +91,7 @@ VALUES
 
 INSERT INTO Holiday
 VALUES
-    ('christmas', '2020-12-25'),
+    ('Christmas', '2020-12-25'),
     ('Easter', '2020-04-12'),
     ('New Years Eve', '2020-12-31')
     ;
