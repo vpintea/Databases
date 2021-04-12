@@ -3,8 +3,7 @@ include('lib/init.php'); ?>
 
 <h1>Main Menu</h1>
 
-    <a href="holiday.php"><strong>Holidays</strong></a> <br>
-    <a href="population_update.php"><strong>City Population Update</strong></a>
+
 
 <!-- <form method="post">
   
@@ -83,6 +82,10 @@ include('lib/init.php'); ?>
 
 <h2>Reports</h2> 
 <ul>
+    <a href="holiday.php"><strong>Holidays</strong></a> <br>
+    <br>
+    <a href="population_update.php"><strong>City Population Update</strong></a>
+    <br>
     <a href="report_1.php"><strong>View Category Report (Report 1</strong></a> <br>
     <br>
     <a href="report_2.php"><strong>View Actual vs. Predicted Revenue for Couches & Sofars Report (Report 2</strong></a> <br>
