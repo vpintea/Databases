@@ -14,26 +14,43 @@ include('lib/init.php');
 
 <?php
 
-$query = "SELECT ProductCategory.name as Category_name, S.restaurant as non FROM ProductCategory
-JOIN Sold on ProductCategory.pid = Sold.pid
-JOIN Store S on Sold.store_no = S.store_no
-GROUP BY Category_name, restaurant;
-SELECT SUM(store_no) as Stores_quantity FROM Store
-GROUP BY restaurant;
-WITH getProductCategoryInSol as (SELECT Sold.store_no, ProductCategory.name,
-SUM(quantity) as Quantity_Sold
+$sql = "with getProductCategoryInSol as (SELECT Sold.store_no,
+    ProductCategory.name,
+    SUM(quantity) as quantity_sold
 FROM Sold
-LEFT JOIN ProductCategory ON Sold.pid = ProductCategory.pid GROUP BY Sold.store_no, ProductCategory.name)
+LEFT JOIN  ProductCategory ON Sold.pid = ProductCategory.pid
+GROUP BY Sold.store_no, ProductCategory.name)
 SELECT
-getProductCategoryInSol.name as Category, CASE
-WHEN Store.restaurant = 1 Then "Restaurant"
-WHEN Store.restaurant = 0 Then "Non-restaurant" END AS Store_type,
-SUM(Quantity_Sold) as Quantity_Sold
+    getProductCategoryInSol.name,
+CASE
+    WHEN Store.restaurant = 1 Then 'Restaurant'
+    WHEN Store.restaurant = 0 Then 'Non-restaurant'
+END AS store_type,
+SUM(quantity_sold) as quantity_sold
 FROM Store
 JOIN getProductCategoryInSol
-ON Store.store_no = getProductCategoryInSol.store_no GROUP BY getProductCategoryInSol.name, Store_type ORDER BY getProductCategoryInSol.name, Store_type ASC;";
+ON Store.store_no = getProductCategoryInSol.store_no
+GROUP BY getProductCategoryInSol.name, store_type
+ORDER BY getProductCategoryInSol.name, store_type";
 
-$result = mysqli_query($conn, $query);
+$result = mysqli_query($conn, $sql);
+
+  if(mysqli_num_rows($result) > 0) {
+      while ($row = $result->fetch_assoc()) {
+          $name = $row["name"];
+          $store_type = $row["store_type"];
+          $quantity_sold = $row["quantity_sold"];
+
+          echo '<tr> 
+            <td>' . $name . '</td> 
+            <td>' . $store_type . '</td> 
+            <td>' . $quantity_sold . '</td> 
+            </tr>';
+      }
+  }else{
+      echo "Error";
+  }
+
 ?>
-
+    <a href="main_menu.php">Back to Main Menu</a>
 <?php include "lib/footer.php"; ?>

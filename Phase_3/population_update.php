@@ -17,9 +17,17 @@ include('lib/init.php');
 
 <?php if (isset($_POST['submit'])) { ?>
 
-    <?php $sql ="UPDATE city SET population = population WHERE city = city";
+    <?php $sql ="UPDATE city SET population = '$_POST[population]' WHERE city = '$_POST[city]'";
+
+    echo $sql;
 
     $result = mysqli_query($conn, $sql);
+
+    if ($conn->query($sql) === TRUE) {
+        echo "New record created successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
 }?>
 
 <?php include "lib/footer.php"; ?>

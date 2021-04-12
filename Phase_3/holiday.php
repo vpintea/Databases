@@ -46,15 +46,20 @@ while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 
 <?php
 if (isset($_POST['submit'])) {
-    $new_holiday = array(
-        "holiday_name" => $_POST['holiday_name'],
-        "date"  => $_POST['date']
-    );
+//    $new_holiday = array(
+//        "holiday_name" => $_POST['holiday_name'],
+//        "date"  => $_POST['date'];
 
-    $sql = "INSERT INTO holiday (holiday_name, `date`) values (:holiday_name, :`date`)";
+    $sql = "INSERT INTO holiday (holiday_name, `date`) values ('$_POST[holiday_name]','$_POST[date]')";
 
-    $statement = $conn->prepare($sql);
-    $statement->execute($new_holiday);
+//    $statement = $conn->prepare($sql);
+//    $statement->execute($new_holiday);
+     if ($conn->query($sql) === TRUE) {
+         echo "New record created successfully";
+     } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+     }
 }
 ?>
+    <a href="main_menu.php">Back to Main Menu</a>
 <?php include "lib/footer.php"; ?>
