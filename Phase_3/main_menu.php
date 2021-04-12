@@ -82,9 +82,9 @@ include('lib/init.php'); ?>
 
 <h2>Reports</h2> 
 <ul>
-    <a href="holiday.php"><strong>Holidays</strong></a> <br>
+    <a href="holiday.php"><strong>View/Update Holidays</strong></a> <br>
     <br>
-    <a href="population_update.php"><strong>City Population Update</strong></a>
+    <a href="population_update.php"><strong>City Population Update</strong></a> <br>
     <br>
     <a href="report_1.php"><strong>View Category Report (Report 1</strong></a> <br>
     <br>
