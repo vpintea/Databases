@@ -83,6 +83,12 @@ include('lib/init.php'); ?>
 
 <h2>Reports</h2> 
 <ul>
+    <a href="report_1.php"><strong>View Category Report (Report 1</strong></a> <br>
+    <br>
+    <a href="report_2.php"><strong>View Actual vs. Predicted Revenue for Couches & Sofars Report (Report 2</strong></a> <br>
+    <br>
+    <a href="report_3.php"><strong>View Store Revenue by Year by State Report (Report 3</strong></a> <br>
+    <br>
     <a href="report_4.php"><strong>View Outdoor Furniture on Groundhog Day Report (Report 4)</strong></a> <br>
     <br>
     <a href="report_5.php"><strong>State with Highest Volume for each Category Report (Report 5)</strong></a> <br>
