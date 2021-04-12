@@ -1,110 +1,109 @@
 <?php include "lib/header.php";
 include('lib/init.php'); ?>
 
-<a href="main_menu.php">Back to Main Menu</a>
-<h2>State with Highest Volume for each Category Report</h2>
+<br>
 
-<h> Select Year:</h>
+
+<a href="main_menu.php">Back to Main Menu</a>
+
+
+<h2>Report 2</h2>
 
 <?php
-$sql = "SELECT YEAR(`date`) AS year
-FROM Date
-GROUP BY YEAR(`date`)
-ORDER BY YEAR(`date`) DESC";
-$result = mysqli_query($conn, $sql);
-//User selects year first
-if(mysqli_num_rows($result) > 0){
-  echo "<form method=\"post\">";
-  echo "<select name = \"selected_year\">";
-  while ($row = $result->fetch_assoc()) {
-    echo "<option value='".$row[year]."' name='".$row[year]."'>".$row[year]."</option>";
-  }
-  echo "</select>";
-  echo "<input type=\"submit\" name=\"submitYear\" value=\"submit\">";
-  echo "</form>";
-}
-if(array_key_exists('submitYear',$_POST)){
-  displayMonthOptions($_POST['selected_year']);
-}else if(array_key_exists('submitMonth',$_POST)){
-  $selected_month = $_POST['selected_month'];
-  $selected_year = $_POST['selected_year'];
-   displayReport($selected_year, $selected_month);
-};
-//User selects month after selecting a year
-function displayMonthOptions($selected_year){
-  include('lib/init.php');
-    $sql_2 = "SELECT MONTH(`date`) AS month
-    FROM Date
-    WHERE YEAR(`date`) = $selected_year
-    GROUP BY MONTH(`date`)
-    ORDER BY MONTH(`date`) DESC";
-    $result_months = mysqli_query($conn, $sql_2);
-    if(mysqli_num_rows($result_months) > 0){
-      echo "<br>Select Month:";
-      echo "<form method=\"post\">";
-      echo "<select name = \"selected_month\">";
+    $sql = "
+    with couchSofasProducts as (SELECT Product.pid, Product.price,  Product.name -- assuming there is only one combination product price
+    FROM Product
+    JOIN ProductCategory
+    ON Product.pid = ProductCategory.pid
+    WHERE ProductCategory.name = 'Couches and sofas'),
 
-      while ($row = $result_months->fetch_assoc()) {
-        echo "<option value='".$row[month]."' name='".$row[month]."'>".$row[month]."</option>";
+    totalNumberUnitWithDiscount as (SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * HasDiscount.discount_price) as total_rev, SUM(Sold.quantity) as totalSoldDiscount
+    FROM couchSofasProducts
+    JOIN Sold on  couchSofasProducts.pid = Sold.pid
+    JOIN HasDiscount on HasDiscount.pid = couchSofasProducts.pid
+    AND Sold.Date = HasDiscount.date
+    WHERE HasDiscount.date IS NOT NULL
+    GROUP BY couchSofasProducts.pid, couchSofasProducts.name),
+
+    totalNumberUnitWithoutDiscount as (
+    SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * couchSofasProducts.Price) as total_rev
+    FROM couchSofasProducts
+    JOIN Sold on  couchSofasProducts.pid = Sold.pid
+    LEFT JOIN HasDiscount on HasDiscount.pid = couchSofasProducts.pid
+    AND Sold.Date = HasDiscount.date
+    WHERE HasDiscount.date IS NULL
+    GROUP BY couchSofasProducts.pid, couchSofasProducts.name),
+
+    totalPredicted as (SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * couchSofasProducts.Price * 0.75) as TotalPredictedRevenue, SUM(Sold.Quantity) as totalSold
+    FROM couchSofasProducts
+    JOIN Sold on  couchSofasProducts.pid = Sold.pid
+    GROUP BY couchSofasProducts.pid, couchSofasProducts.name)
+
+    SELECT
+    couchSofasProducts.pid,
+    couchSofasProducts.name,
+    couchSofasProducts.price,
+    totalPredicted.totalSold,
+    totalNumberUnitWithDiscount.totalSoldDiscount,
+    totalPredicted.totalSold - totalNumberUnitWithDiscount.totalSoldDiscount as totalRetail,
+    (COALESCE(totalNumberUnitWithDiscount.total_rev,0) + totalNumberUnitWithoutDiscount.total_rev) as total_revenue,
+    totalPredicted.TotalPredictedRevenue,
+    (totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue as difference
+    FROM couchSofasProducts
+    LEFT JOIN totalNumberUnitWithDiscount ON couchSofasProducts.pid = totalNumberUnitWithDiscount.PID
+    LEFT JOIN totalNumberUnitWithoutDiscount ON couchSofasProducts.pid = totalNumberUnitWithoutDiscount.PID
+    LEFT JOIN totalPredicted ON couchSofasProducts.pid = totalPredicted.PID
+    WHERE ABS((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue ) > 5000
+    ORDER BY ABS((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue ) DESC
+    ";
+
+
+    $result = mysqli_query($conn, $sql);
+
+    if(mysqli_num_rows($result) > 0){
+        // echo "Total rows: " . mysqli_num_rows($result);
+
+        echo '<table border="1" cellspacing="2" cellpadding="2">
+        <tr>
+            <td> PID </td>
+            <td> Product Name </td>
+            <td> Product Retail Price </td>
+            <td> Total Sales </td>
+            <td> Total Sales Discount</td>
+            <td> Total Sales Retail Price</td>
+            <td> Total Revenue</td>
+            <td> Total Predicted Revenue</td>
+            <td>  Difference Actual VS Predicted </td>
+        </tr>';
+
+        while ($row = $result->fetch_assoc()) {
+            $pid = $row["pid"];
+            $name = $row["name"];
+            $price = $row["price"];
+            $totalSold = $row["totalSold"];
+            $totalSoldDiscount = $row["totalSoldDiscount"];
+            $totalRetail = $row["totalRetail"];
+            $total_revenue = $row["total_revenue"];
+            $TotalPredictedRevenue = $row["TotalPredictedRevenue"];
+            $difference = $row["difference"];
+
+            echo '<tr>
+                      <td>'.$pid.'</td>
+                      <td>'.$name.'</td>
+                      <td>'.$price.'</td>
+                      <td>'.$totalSold.'</td>
+                      <td>'.$totalSoldDiscount.'</td>
+                      <td>'.$totalRetail.'</td>
+                      <td>'.$total_revenue.'</td>
+                      <td>'.$TotalPredictedRevenue.'</td>
+                      <td>'.$difference.'</td>
+                  </tr>';
+        }
+
+        $result->free();
       }
-      echo "</select>";
-      echo "<input type=\"hidden\" name =\"selected_year\" value=\"$selected_year\">";
-      echo "<input type=\"submit\" name =\"submitMonth\" id=\"submitMonth\" value=\"submit\">";
-      echo "</form>";
-    }
-}
-//Display the report for the corresponfing month and year selected
-function displayReport($selected_year, $selected_month){
-  include('lib/init.php');
-  $sql_main_query ="WITH TotalNumberSold(category_name, state, total_number_sold)
-              AS (SELECT category_name, state, SUM(quantity) AS total_number_sold
-              FROM (SELECT name AS category_name, state, quantity
-              FROM ProductCategory
-                     JOIN Sold ON ProductCategory.pid = Sold.pid
-                     JOIN Store ON Store.store_no = Sold.store_no
-              WHERE MONTH (Sold.`date`) = $selected_month AND YEAR (Sold.`date`) = $selected_year) AS ProductsSoldPerCategory
-              GROUP BY category_name, state
-              )
-              SELECT TotalNumberSold.category_name, TotalNumberSold.state, TotalNumberSold.total_number_sold
-              FROM (SELECT category_name, MAX(total_number_sold) AS max_total_number_sold
-              FROM TotalNumberSold
-              GROUP BY category_name) AS TotalNumberSoldPerCategory
-                JOIN TotalNumberSold ON TotalNumberSoldPerCategory.category_name = TotalNumberSold.category_name
-              AND TotalNumberSoldPerCategory.max_total_number_sold = TotalNumberSold.total_number_sold
-              ORDER BY category_name ASC";
+      else {
+        echo "Error";
+      };
 
-  $result_report = mysqli_query($conn, $sql_main_query);
-  if(!$result_report){
-    echo "error";
-    return;
-  }
-  if(mysqli_num_rows($result_report) > 0){
-    echo "<h3>Showing results for ".$selected_month. "/" .$selected_year. "</h3>";
-    echo '<table border="1" cellspacing="2" cellpadding="2">
-          <tr>
-          <td> Category Name </td>
-          <td> State </td>
-          <td> Total Number Sold </td>
-          </tr>';
-    while ($row = $result_report->fetch_assoc()) {
-      $category_name = $row["category_name"];
-      $state = $row["state"];
-      $number_sold = $row["total_number_sold"];
-
-      echo '<tr>
-            <td>'.$category_name.'</td>
-            <td>'.$state.'</td>
-            <td>'.$number_sold.'</td>
-            </tr>';
-      }
-
-    $result_report->free();
-  }
-  else
-  {
-    echo "<h3>No results available for ".$selected_month. "/" .$selected_year."<h3>";
-  }
-}
 ?>
-
-<?php include "lib/footer.php"; ?>
