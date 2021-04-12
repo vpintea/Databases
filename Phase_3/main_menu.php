@@ -3,8 +3,13 @@ include('lib/init.php'); ?>
 
 <h1>Main Menu</h1>
 
-
-
+<h2>Update Forms</h2>
+    
+    <a href="holiday.php"><strong>View/Update Holidays</strong></a> <br>
+    <br>
+    <a href="population_update.php"><strong>City Population Update</strong></a> <br>
+    <br>
+    
 <!-- <form method="post">
   
 <input type="Submit" name="Submit" value="View Statistics"> -->
@@ -82,27 +87,24 @@ include('lib/init.php'); ?>
 
 <h2>Reports</h2> 
 <ul>
-    <a href="holiday.php"><strong>View/Update Holidays</strong></a> <br>
+    
+    <a href="report_1.php"><strong>View Category Report (Report 1)</strong></a> <br>
     <br>
-    <a href="population_update.php"><strong>City Population Update</strong></a> <br>
+    <a href="report_2.php"><strong>View Actual vs. Predicted Revenue for Couches & Sofars Report (Report 2)</strong></a> <br>
     <br>
-    <a href="report_1.php"><strong>View Category Report (Report 1</strong></a> <br>
-    <br>
-    <a href="report_2.php"><strong>View Actual vs. Predicted Revenue for Couches & Sofars Report (Report 2</strong></a> <br>
-    <br>
-    <a href="report_3.php"><strong>View Store Revenue by Year by State Report (Report 3</strong></a> <br>
+    <a href="report_3.php"><strong>View Store Revenue by Year by State Report (Report 3)</strong></a> <br>
     <br>
     <a href="report_4.php"><strong>View Outdoor Furniture on Groundhog Day Report (Report 4)</strong></a> <br>
     <br>
-    <a href="report_5.php"><strong>State with Highest Volume for each Category Report (Report 5)</strong></a> <br>
+    <a href="report_5.php"><strong>View State with Highest Volume for each Category Report (Report 5)</strong></a> <br>
     <br>
     <a href="report_6.php"><strong>View Revenue by Population Report (Report 6)</strong></a> <br>
     <br>
-    <a href="report_7.php"><strong>Childcare Sales Volume Report (Report 7)</strong></a> <br>
+    <a href="report_7.php"><strong>View Childcare Sales Volume Report (Report 7)</strong></a> <br>
     <br>
-    <a href="report_8.php"><strong>Report 8 - View Restaurant Impact on Category Sales </strong></a> <br>
+    <a href="report_8.php"><strong>View Restaurant Impact on Category Sales (Report 8)</strong></a> <br>
     <br>
-    <a href="report_9.php"><strong>Advertising Campaign Analysis Report (Report 9)</strong></a> 
+    <a href="report_9.php"><strong>View Advertising Campaign Analysis Report (Report 9)</strong></a> 
 
 </ul>
 
