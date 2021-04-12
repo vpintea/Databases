@@ -34,13 +34,12 @@ if(array_key_exists('submitState',$_POST)){
 //Display the report for the corresponfing month and year selected
 function displayReport($selected_state){
   include('lib/init.php');
-  echo "<p>" .$selected_state. "</p>";
 
   $sql_main_query = "with storesInState as (SELECT City.city, Store.store_no, Store.address, Store.State
   FROM City
   JOIN Store on (City.city = Store.city and City.state = Store.state)
   WHERE
-  City.State = 'California' ),
+  City.State = '$selected_state'),
 
   revenueDiscount as (
     SELECT storesInState.store_no, SUM(Sold.quantity * HasDiscount.discount_price) as revenue,  YEAR(sold.date) as year_sold
@@ -65,18 +64,16 @@ function displayReport($selected_state){
   storesInState.store_no,
   storesInState.address,
   storesInState.city,
-  YEAR(sold.date) as sales_year, -- need to join with sold in case there is year with only discount sales or only regular sales
+  YEAR(sold.date) as sales_year,
   (COALESCE(revenueDiscount.revenue,0) + COALESCE(revenueRetail.revenue,0)) as total_revenue
   FROM storesInState
   LEFT JOIN sold ON storesInState.store_no = SOLD.store_no
   LEFT JOIN revenueDiscount ON (storesInState.store_no = revenueDiscount.store_no AND YEAR(sold.date) = revenueDiscount.year_sold)
   LEFT JOIN revenueRetail ON (storesInState.store_no = revenueRetail.store_no AND YEAR(sold.date) = revenueRetail.year_sold)
   GROUP BY storesInState.store_no, storesInState.address, storesInState.city, YEAR(sold.date), total_revenue
-  ORDER BY YEAR(sold.date) ASC, total_revenue DESC;
-  ";
+  ORDER BY YEAR(sold.date) ASC, total_revenue DESC";
 
   $result_report = mysqli_query($conn, $sql_main_query);
-
 
   if(!$result_report){
     echo "<p> No results to display </p>";
@@ -84,7 +81,7 @@ function displayReport($selected_state){
   }
 
   if(mysqli_num_rows($result_report) > 0){
-    echo "<p>" .$selected_state. "</p>";
+    echo "<h3>Results showing for". $selected_state. "</h3>";
     echo '<table border="1" cellspacing="2" cellpadding="2">
     <tr>
         <td> Store Number </td>

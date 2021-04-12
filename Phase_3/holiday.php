@@ -13,8 +13,14 @@ include('lib/init.php');
         <th>Date</th>
     </tr>
 
+<?php
+
+$query = "SELECT holiday_name, `date`" .
+         "FROM holiday";
+
+$result = mysqli_query($conn, $query);
 if (!empty($result) && (mysqli_num_rows($result) == 0) ) {
-    array_push($error_msg,  "SELECT ERROR: Holidays <br>" . __FILE__ ." line:". __LINE__ );
+    array_push($error_msg,  "SELECT ERROR: Holidays" . __FILE__ ." line:". __LINE__ );
 }
 
 while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
