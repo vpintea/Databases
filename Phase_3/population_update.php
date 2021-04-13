@@ -1,5 +1,5 @@
 <?php
-include "lib/header.php";
+include('lib/header.php');
 include('lib/init.php');
 ?>
 
@@ -17,17 +17,34 @@ include('lib/init.php');
 
 <?php if (isset($_POST['submit'])) { ?>
 
-    <?php $sql ="UPDATE city SET population = '$_POST[population]' WHERE city = '$_POST[city]'";
+    <?php $sql ="UPDATE city SET population = '$_POST[population]' WHERE city = '$_POST[city]' AND state = '$_POST[state]'";
 
-    echo $sql;
+    // TESTING
 
-    $result = mysqli_query($conn, $sql);
+//    $result = mysqli_query($conn, $sql);
+//    echo "result: " . $result;
+//    echo "num of rows: " . $result->num_rows;
+//    $row_cnt = $result->num_rows;
+//    printf("Result set has %d rows.\n", $row_cnt);
+    // result is always 1 and row_cnt is always 0
 
-    if ($conn->query($sql) === TRUE) {
-        echo "New record created successfully";
+    //  https://www.w3schools.com/php/php_mysql_update.asp
+    //  https://www.tutorialspoint.com/mysqli/mysqli_update_query.htm
+    //  https://www.php.net/manual/en/mysqli-result.num-rows.php
+    //  if ($conn->query($sql) === TRUE) {
+    //  if ($result->num_rows > 0)
+    //  if (mysqli_query($conn, $sql))
+
+    // END OF TEST
+
+    mysqli_query($conn, $sql);
+    if (mysqli_affected_rows($conn)) { //https://www.php.net/manual/en/mysqli.affected-rows.php
+        echo "New record updated successfully";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error updating record: " . $sql . "<br>" . mysqli_error($conn);
     }
 }?>
+
+<br><a href="main_menu.php">Back to Main Menu</a><br>
 
 <?php include "lib/footer.php"; ?>

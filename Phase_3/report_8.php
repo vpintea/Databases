@@ -1,9 +1,9 @@
 <?php
-include "lib/header.php";
+include('lib/header.php');
 include('lib/init.php');
 ?>
 
-<h2>Report 8 - View Restaurant Impact on Category Sales</h2>
+<h2>View Restaurant Impact on Category Sales</h2>
 
 <table border="1" cellspacing="2" cellpadding="2">
     <tr>
@@ -42,15 +42,16 @@ $result = mysqli_query($conn, $sql);
           $quantity_sold = $row["quantity_sold"];
 
           echo '<tr> 
-            <td>' . $name . '</td> 
-            <td>' . $store_type . '</td> 
-            <td>' . $quantity_sold . '</td> 
+            <td>'.$name.'</td> 
+            <td>'.$store_type.'</td> 
+            <td>'.$quantity_sold.'</td> 
             </tr>';
       }
   }else{
       echo "Error";
   }
-
 ?>
-    <a href="main_menu.php">Back to Main Menu</a>
+
+<br><a href="main_menu.php">Back to Main Menu</a><br>
+
 <?php include "lib/footer.php"; ?>
