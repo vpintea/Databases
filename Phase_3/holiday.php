@@ -19,6 +19,7 @@ include('lib/init.php');
     $result = mysqli_query($conn, $query);
     if (!empty($result) && (mysqli_num_rows($result) == 0) ) {
         array_push($error_msg,  "SELECT ERROR: Holidays" . __FILE__ ." line:". __LINE__ );
+        print "No holidays found in the system";
     }
 
     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
@@ -45,9 +46,15 @@ include('lib/init.php');
 <?php
 if (isset($_POST['submit'])) {
     $sql = "INSERT INTO holiday (holiday_name, `date`) values ('$_POST[holiday_name]','$_POST[date]')";
+    $date_exist = mysqli_query($conn, "SELECT date FROM `date` WHERE date = '$_POST[date]'");
 
-     if ($conn->query($sql) === TRUE) {
-         echo "New record created successfully";
+     if ($date_exist->num_rows < 1) {
+         mysqli_query($conn, "INSERT INTO date (`date`) VALUE ('$_POST[date]')");
+         print "<br>Date Added <br>";
+         mysqli_query($conn,$sql);
+         print "<br>Holiday Added <br>";
+     } elseif ($conn->query($sql) === TRUE){
+         echo "<br>New record created successfully <br>";
      } else {
          echo "Error: " . $sql . "<br>" . $conn->error;
      }
