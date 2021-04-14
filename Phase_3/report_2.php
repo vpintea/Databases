@@ -11,7 +11,7 @@ include('lib/init.php'); ?>
 
 <?php
     $sql = "
-    with couchSofasProducts as (SELECT Product.pid, Product.price,  Product.name -- assuming there is only one combination product price
+    with couchSofasProducts as (SELECT Product.pid, Product.price,  Product.name
     FROM Product
     JOIN ProductCategory
     ON Product.pid = ProductCategory.pid
