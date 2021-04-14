@@ -53,8 +53,10 @@ if (isset($_POST['submit'])) {
          print "<br>Date Added <br>";
          mysqli_query($conn,$sql);
          print "<br>Holiday Added <br>";
+         echo "<meta http-equiv='refresh' content='0'>";
      } elseif ($conn->query($sql) === TRUE){
          echo "<br>New record created successfully <br>";
+         echo "<meta http-equiv='refresh' content='0'>";
      } else {
          echo "Error: " . $sql . "<br>" . $conn->error;
      }
