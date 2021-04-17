@@ -3,7 +3,7 @@ include('lib/header.php');
 include('lib/init.php');
 ?>
 
-<h1>Holidays</h1>
+<h2>View Holidays</h2>
 
 <table border="1" cellspacing="2" cellpadding="2">
     <tr>
