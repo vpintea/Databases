@@ -50,20 +50,29 @@ ORDER BY c.name, c.store_type desc";
 $result = mysqli_query($conn, $sql);
 
   if(mysqli_num_rows($result) > 0) {
+
+    echo '<table border="1" cellspacing="2" cellpadding="2">
+    <tr>
+        <td> Category Name </td>
+        <td> Store type </td>
+        <td> Quantity Sold </td>
+    </tr>';
+
       while ($row = $result->fetch_assoc()) {
           $name = $row["name"];
           $store_type = $row["store_type"];
           $quantity_sold = $row["quantity_sold"];
 
-          echo '<tr> 
-            <td>'.$name.'</td> 
-            <td>'.$store_type.'</td> 
-            <td>'.$quantity_sold.'</td> 
+          echo '<tr>
+            <td>' . $name . '</td>
+            <td>' . $store_type . '</td>
+            <td>' . $quantity_sold . '</td>
             </tr>';
       }
   }else{
       echo "Error";
   }
+    
 ?>
 
 <br><a href="main_menu.php">Back to Main Menu</a><br>
