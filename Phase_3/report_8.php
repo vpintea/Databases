@@ -5,12 +5,6 @@ include('lib/init.php');
 
 <h2>View Restaurant Impact on Category Sales</h2>
 
-<table border="1" cellspacing="2" cellpadding="2">
-    <tr>
-        <th>Category</th>
-        <th>Store Type</th>
-        <th>Quantity Sold</th>
-    </tr>
 
 <?php
 
