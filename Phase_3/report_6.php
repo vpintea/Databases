@@ -3,18 +3,13 @@ include('lib/init.php'); ?>
 
 <h2>View Revenue by Population</h2>
 
-<form method="post">
-  
-  <input type="Submit" name="Submit" value="Submit">
-</form>
-
 <br>
 <a href="main_menu.php">Back to Main Menu</a>
 
-<?php if (isset($_POST['Submit'])) { ?>
-  <h2>Results</h2>
+<h2>Results</h2>
 
-  <?php $sql = "-- Calculate retail revenue for each city
+<?php 
+$sql = "-- Calculate retail revenue for each city
 with retail_rev as (select YEAR(Sold.date) as Year, city, state, sum(price*quantity) as retailRev
 FROM sold
 LEFT JOIN Product P on Sold.pid = P.pid
@@ -92,8 +87,6 @@ $result = mysqli_query($conn, $sql);
       else {
         echo "Error";
       }
-
-};
 ?>
 
  <?php include "lib/footer.php"; ?>
