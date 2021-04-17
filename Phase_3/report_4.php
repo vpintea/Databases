@@ -3,18 +3,13 @@ include('lib/init.php'); ?>
 
 <h2>View Outdoor Furniture on Groundhog Day Report</h2>
 
-<form method="post">
-  
-  <input type="Submit" name="Submit" value="Submit">
-</form>
-
 <br>
 <a href="main_menu.php">Back to Main Menu</a>
 
-<?php if (isset($_POST['Submit'])) { ?>
-  <h2>Results</h2>
+<h2>Results</h2>
 
-  <?php $sql = "SELECT YEAR(x.date) as Year, sum(x.quantity) as TotalQuantity, sum(x.quantity)/365 as AvgDailyQuantity, 
+<?php
+$sql = "SELECT YEAR(x.date) as Year, sum(x.quantity) as TotalQuantity, sum(x.quantity)/365 as AvgDailyQuantity, 
   sum(y.quant) as GroundHogDay
 FROM 
 (SELECT date, quantity -- only outdoor sales
@@ -58,7 +53,6 @@ $result = mysqli_query($conn, $sql);
         echo "Error";
       }
 
-};
 ?>
 
  <?php include "lib/footer.php"; ?>
