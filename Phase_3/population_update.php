@@ -11,7 +11,7 @@ include('lib/init.php');
         <th>City</th>
         <th>State</th>
         <th>Population</th>
-    </tr>git
+    </tr>
 
     <?php
 
