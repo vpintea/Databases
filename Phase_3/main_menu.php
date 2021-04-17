@@ -4,12 +4,12 @@ include('lib/init.php'); ?>
 <h1>Main Menu</h1>
 
 <h2>Update Forms</h2>
-    
+<ul>    
     <a href="holiday.php"><strong>View/Update Holidays</strong></a> <br>
     <br>
     <a href="population_update.php"><strong>City Population Update</strong></a> <br>
     <br>
-    
+</ul>    
 <!-- <form method="post">
   
 <input type="Submit" name="Submit" value="View Statistics"> -->
@@ -17,7 +17,7 @@ include('lib/init.php'); ?>
 
 
 <h2>Summary Statistics</h2>
-
+<ul>
 <?php   
     
     // query the number of stores
@@ -82,10 +82,10 @@ include('lib/init.php'); ?>
         echo "error";
     }
 
-
 ?>
-
+</ul>
 <h2>Reports</h2> 
+
 <ul>
     
     <a href="report_1.php"><strong>View Category Report (Report 1)</strong></a> <br>
