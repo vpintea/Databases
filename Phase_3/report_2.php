@@ -42,12 +42,12 @@ include('lib/init.php'); ?>
     SELECT
     couchSofasProducts.pid,
     couchSofasProducts.name,
-    couchSofasProducts.price,
+    format(couchSofasProducts.price,2) as prodPrice,
     totalPredicted.totalSold,
     totalNumberUnitWithDiscount.totalSoldDiscount,
     format((totalPredicted.totalSold - totalNumberUnitWithDiscount.totalSoldDiscount),2) as totalRetail,
     format((COALESCE(totalNumberUnitWithDiscount.total_rev,0) + totalNumberUnitWithoutDiscount.total_rev),2) as total_revenue,
-    totalPredicted.TotalPredictedRevenue,
+    format(totalPredicted.TotalPredictedRevenue,2) as totalProdRev,
     format((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue,2) as difference
     FROM couchSofasProducts
     LEFT JOIN totalNumberUnitWithDiscount ON couchSofasProducts.pid = totalNumberUnitWithDiscount.PID
@@ -79,12 +79,12 @@ include('lib/init.php'); ?>
         while ($row = $result->fetch_assoc()) {
             $pid = $row["pid"];
             $name = $row["name"];
-            $price = $row["price"];
+            $price = $row["prodPrice"];
             $totalSold = $row["totalSold"];
             $totalSoldDiscount = $row["totalSoldDiscount"];
             $totalRetail = $row["totalRetail"];
             $total_revenue = $row["total_revenue"];
-            $TotalPredictedRevenue = $row["TotalPredictedRevenue"];
+            $TotalPredictedRevenue = $row["totalProdRev"];
             $difference = $row["difference"];
 
             echo '<tr>
