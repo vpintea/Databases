@@ -6,8 +6,6 @@ include('lib/init.php'); ?>
 <br>
 <a href="main_menu.php">Back to Main Menu</a>
 
-<h2>Results</h2>
-
 <?php
 $sql = "SELECT YEAR(x.date) as Year, sum(x.quantity) as TotalQuantity, sum(x.quantity)/365 as AvgDailyQuantity, 
   sum(y.quant) as GroundHogDay
