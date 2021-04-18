@@ -65,7 +65,7 @@ function displayReport($selected_state){
   storesInState.address,
   storesInState.city,
   YEAR(sold.date) as sales_year,
-  (COALESCE(revenueDiscount.revenue,0) + COALESCE(revenueRetail.revenue,0)) as total_revenue
+  format((COALESCE(revenueDiscount.revenue,0) + COALESCE(revenueRetail.revenue,0)),2) as total_revenue
   FROM storesInState
   LEFT JOIN sold ON storesInState.store_no = SOLD.store_no
   LEFT JOIN revenueDiscount ON (storesInState.store_no = revenueDiscount.store_no AND YEAR(sold.date) = revenueDiscount.year_sold)
