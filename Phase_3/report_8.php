@@ -6,7 +6,7 @@ include('lib/init.php');
 <br>
 <a href="main_menu.php">Back to Main Menu</a>
 
-<h2>View Restaurant Impact on Category Sales</h2>
+<h2>Restaurant Impact on Category Sales</h2>
 
 <?php
 

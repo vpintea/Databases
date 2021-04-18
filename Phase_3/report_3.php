@@ -2,7 +2,7 @@
 include('lib/init.php'); ?>
 
 <a href="main_menu.php">Back to Main Menu</a>
-<h2>View Store Revenue by Year by State Report</h2>
+<h2>Store Revenue by Year by State Report</h2>
 
 <h> Select State:</h>
 
