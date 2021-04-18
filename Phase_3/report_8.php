@@ -51,17 +51,20 @@ $result = mysqli_query($conn, $sql);
         <td> Store type </td>
         <td> Quantity Sold </td>
     </tr>';
-
+      $counter = 1;
       while ($row = $result->fetch_assoc()) {
           $name = $row["name"];
           $store_type = $row["store_type"];
           $quantity_sold = $row["quantity_sold"];
 
-          echo '<tr>
-            <td>' . $name . '</td>
-            <td>' . $store_type . '</td>
-            <td>' . $quantity_sold . '</td>
-            </tr>';
+          echo '<tr>';
+          if ($counter % 2 != 0) {
+            echo  '<td rowspan="2">' . $name . '</td>';
+          }
+          echo  '<td>' . $store_type . '</td>
+                <td>' . $quantity_sold . '</td>
+                </tr>';
+          $counter++;
       }
   }else{
       echo "Error";
