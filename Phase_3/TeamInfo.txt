@@ -1,0 +1,346 @@
+Queries used in our project:
+
+*** Main Menu Form (main_menu.php) ***
+
+//Query the number of stores
+$sql = "SELECT COUNT(*) as TotalStores FROM Store";
+
+//Query the number of stores with restaurants or snackbars
+$sql = "SELECT COUNT(*) as TotalNumberRestaurants 
+        FROM Store 
+        WHERE restaurant = True OR snackbar = True";
+
+//Query the number of stores that offer childcare
+$sql = "SELECT COUNT(*) as TotalStoresOfferChildcare 
+        FROM Store 
+        WHERE `limit` IS NOT NULL";
+
+//Query the number of products
+$sql = "SELECT COUNT(*) as TotalProducts 
+        FROM Product";
+
+//Query the number of ad campaigns
+$sql = "SELECT COUNT(DISTINCT description) as TotalUniqueCampaigns 
+        FROM AdCampaign";
+
+*** Holidays Form (holiday.php) ***
+
+//To show current holidays stored in the database
+$query = "SELECT holiday_name, `date`" . "FROM holiday";
+
+//Add a new date in case it does not exist in the database before adding a new holiday 
+$date_exist = mysqli_query($conn, "SELECT date FROM `date` WHERE date = '$_POST[date]'");
+
+//To add a new holiday into the database
+$sql = "INSERT INTO holiday (holiday_name, `date`) values ('$_POST[holiday_name]','$_POST[date]')";
+
+*** Population Form (population_update.php) ***
+
+//Query to display all cities stored in the database and their corresponding state and population
+$query = "SELECT city, state, population FROM city";
+
+//Query to update the populaton of a particular city
+$sql ="UPDATE city SET population = '$_POST[population]' WHERE city = '$_POST[city]' AND state = '$_POST[state]'";
+
+*** View Category Report (report_1.php) ***
+
+//Query data for report
+$sql = "
+    SELECT
+    Category.name as category_name,
+    count(Product.pid) as total_num_products,
+    min(Product.price) as min_retail_price,
+    round(avg(Product.price),2) as avg_price,
+    max(Product.price) as max_price
+    FROM
+    Category
+    LEFT JOIN ProductCategory ON  Category.name = productCategory.name
+    LEFT JOIN Product
+    ON Product.pid = productCategory.pid
+    GROUP BY Category.name
+    ORDER BY Category.name ASC;
+    ";
+
+*** View Actual vs. Predicted Revenue for Couches & Sofars Report (report_2.php) ***
+
+//Query data for report
+$sql = "
+    with couchSofasProducts as (SELECT Product.pid, Product.price,  Product.name
+    FROM Product
+    JOIN ProductCategory
+    ON Product.pid = ProductCategory.pid
+    WHERE ProductCategory.name = 'Couches and sofas'),
+
+    totalNumberUnitWithDiscount as (SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * HasDiscount.discount_price) as total_rev, SUM(Sold.quantity) as totalSoldDiscount
+    FROM couchSofasProducts
+    JOIN Sold on  couchSofasProducts.pid = Sold.pid
+    JOIN HasDiscount on HasDiscount.pid = couchSofasProducts.pid
+    AND Sold.Date = HasDiscount.date
+    WHERE HasDiscount.date IS NOT NULL
+    GROUP BY couchSofasProducts.pid, couchSofasProducts.name),
+
+    totalNumberUnitWithoutDiscount as (
+    SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * couchSofasProducts.Price) as total_rev
+    FROM couchSofasProducts
+    JOIN Sold on  couchSofasProducts.pid = Sold.pid
+    LEFT JOIN HasDiscount on HasDiscount.pid = couchSofasProducts.pid
+    AND Sold.Date = HasDiscount.date
+    WHERE HasDiscount.date IS NULL
+    GROUP BY couchSofasProducts.pid, couchSofasProducts.name),
+
+    totalPredicted as (SELECT couchSofasProducts.pid, couchSofasProducts.name, SUM(Sold.quantity * couchSofasProducts.Price * 0.75) as TotalPredictedRevenue, SUM(Sold.Quantity) as totalSold
+    FROM couchSofasProducts
+    JOIN Sold on  couchSofasProducts.pid = Sold.pid
+    GROUP BY couchSofasProducts.pid, couchSofasProducts.name)
+
+    SELECT
+    couchSofasProducts.pid,
+    couchSofasProducts.name,
+    couchSofasProducts.price,
+    totalPredicted.totalSold,
+    totalNumberUnitWithDiscount.totalSoldDiscount,
+    totalPredicted.totalSold - totalNumberUnitWithDiscount.totalSoldDiscount as totalRetail,
+    (COALESCE(totalNumberUnitWithDiscount.total_rev,0) + totalNumberUnitWithoutDiscount.total_rev) as total_revenue,
+    totalPredicted.TotalPredictedRevenue,
+    (totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue as difference
+    FROM couchSofasProducts
+    LEFT JOIN totalNumberUnitWithDiscount ON couchSofasProducts.pid = totalNumberUnitWithDiscount.PID
+    LEFT JOIN totalNumberUnitWithoutDiscount ON couchSofasProducts.pid = totalNumberUnitWithoutDiscount.PID
+    LEFT JOIN totalPredicted ON couchSofasProducts.pid = totalPredicted.PID
+    WHERE ABS((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue ) > 5000
+    ORDER BY ABS((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue ) DESC
+    ";
+
+*** View Store Revenue by Year by State Report (report_3.php) ***
+
+//Query to populate dropdown list so user can select a state
+$sql =  "SELECT DISTINCT(CITY.state) as state FROM City ORDER BY City.State";
+
+//Query data for report
+$sql_main_query = "with storesInState as (SELECT City.city, Store.store_no, Store.address, Store.State
+  FROM City
+  JOIN Store on (City.city = Store.city and City.state = Store.state)
+  WHERE
+  City.State = '$selected_state'),
+
+  revenueDiscount as (
+    SELECT storesInState.store_no, SUM(Sold.quantity * HasDiscount.discount_price) as revenue,  YEAR(sold.date) as year_sold
+    FROM Sold
+    JOIN storesInState ON storesInState.store_no = SOLD.store_no
+    JOIN HasDiscount on HasDiscount.pid = SOLD.pid AND Sold.Date = HasDiscount.date
+    JOIN Product on Product.pid = Sold.pid
+    WHERE HasDiscount.date IS NOT NULL
+    GROUP BY YEAR(sold.date), storesInState.store_no
+  ),
+
+  revenueRetail as (
+    SELECT storesInState.store_no, SUM(Sold.quantity * Product.Price) as revenue,  YEAR(sold.date) as year_sold
+    FROM Sold
+    JOIN storesInState ON storesInState.store_no = SOLD.store_no
+    LEFT JOIN HasDiscount on HasDiscount.pid = SOLD.pid AND Sold.Date = HasDiscount.date
+    JOIN Product on Product.pid = Sold.pid
+    WHERE HasDiscount.date IS NULL
+    GROUP BY YEAR(sold.date), storesInState.store_no)
+
+  SELECT
+  storesInState.store_no,
+  storesInState.address,
+  storesInState.city,
+  YEAR(sold.date) as sales_year,
+  (COALESCE(revenueDiscount.revenue,0) + COALESCE(revenueRetail.revenue,0)) as total_revenue
+  FROM storesInState
+  LEFT JOIN sold ON storesInState.store_no = SOLD.store_no
+  LEFT JOIN revenueDiscount ON (storesInState.store_no = revenueDiscount.store_no AND YEAR(sold.date) = revenueDiscount.year_sold)
+  LEFT JOIN revenueRetail ON (storesInState.store_no = revenueRetail.store_no AND YEAR(sold.date) = revenueRetail.year_sold)
+  GROUP BY storesInState.store_no, storesInState.address, storesInState.city, YEAR(sold.date), total_revenue
+  ORDER BY YEAR(sold.date) ASC, total_revenue DESC";
+
+*** View Outdoor Furniture on Groundhog Day Report (report_4.php) ***
+
+//Query data for report
+$sql = "SELECT YEAR(x.date) as Year, sum(x.quantity) as TotalQuantity, sum(x.quantity)/365 as AvgDailyQuantity, 
+  sum(y.quant) as GroundHogDay
+FROM 
+(SELECT date, quantity -- only outdoor sales
+FROM Sold JOIN ProductCategory ON Sold.PID = ProductCategory.PID
+WHERE ProductCategory.name = 'Outdoor Furniture') as x
+LEFT JOIN
+(SELECT date, quantity as quant -- only outdoor on Feb. 2
+FROM Sold JOIN ProductCategory ON Sold.PID = ProductCategory.PID
+WHERE ProductCategory.name = 'Outdoor Furniture' AND MONTH(Sold.date) = 2
+AND DAY(Sold.date) = 2) as y
+ON x.date = y.date GROUP BY YEAR ORDER BY YEAR ASC";
+
+*** View State with Highest Volume for each Category Report (report_5.php) ***
+
+//Query to populate dropdown list so the user can select a year from an existing date in the database
+$sql = "SELECT YEAR(`date`) AS year
+FROM Date
+GROUP BY YEAR(`date`)
+ORDER BY YEAR(`date`) DESC";
+
+//Query to populate dropdown list so the user can select a month from an existing date in the database 
+//and within the year previsouly selected by the user 
+$sql_2 = "SELECT MONTH(`date`) AS month
+    FROM Date
+    WHERE YEAR(`date`) = $selected_year
+    GROUP BY MONTH(`date`)
+    ORDER BY MONTH(`date`) DESC";
+
+    $result_months = mysqli_query($conn, $sql_2);
+
+//Query data for report
+ $sql_main_query ="WITH TotalNumberSold(category_name, state, total_number_sold)
+              AS (SELECT category_name, state, SUM(quantity) AS total_number_sold
+              FROM (SELECT name AS category_name, state, quantity
+              FROM ProductCategory
+                     JOIN Sold ON ProductCategory.pid = Sold.pid
+                     JOIN Store ON Store.store_no = Sold.store_no
+              WHERE MONTH (Sold.`date`) = $selected_month AND YEAR (Sold.`date`) = $selected_year) AS ProductsSoldPerCategory
+              GROUP BY category_name, state
+              )
+              SELECT TotalNumberSold.category_name, TotalNumberSold.state, TotalNumberSold.total_number_sold
+              FROM (SELECT category_name, MAX(total_number_sold) AS max_total_number_sold
+              FROM TotalNumberSold
+              GROUP BY category_name) AS TotalNumberSoldPerCategory
+                JOIN TotalNumberSold ON TotalNumberSoldPerCategory.category_name = TotalNumberSold.category_name
+              AND TotalNumberSoldPerCategory.max_total_number_sold = TotalNumberSold.total_number_sold
+              ORDER BY category_name ASC";
+
+*** View Revenue by Population Report (report_6.php) ***
+
+//Query data for report
+$sql = "-- Calculate retail revenue for each city
+with retail_rev as (select YEAR(Sold.date) as Year, city, state, sum(price*quantity) as retailRev
+FROM sold
+LEFT JOIN Product P on Sold.pid = P.pid
+LEFT JOIN HasDiscount ON P.pid = HasDiscount.pid
+LEFT JOIN Store on Sold.store_no = Store.store_no
+where HasDiscount.date IS null
+group by city, state, year),
+-- Calculate discounted revenue for each city
+discount_rev as (select YEAR(Sold.date) as Year, city, state, sum(discount_price*quantity) as discountRev
+FROM sold
+LEFT JOIN Product P on Sold.pid = P.pid
+LEFT JOIN HasDiscount ON P.pid = HasDiscount.pid
+LEFT JOIN Store on Sold.store_no = Store.store_no
+group by city, state, year),
+citySize as (SELECT City.city, City.state, City.population as pop, -- Calculate city population categories
+             CASE
+                 WHEN (City.population < 3700000) THEN 'small'
+                 WHEN (City.population BETWEEN 3700000 AND 6699999) THEN 'medium'
+                 WHEN (city.population BETWEEN 6700000 AND 8999999) THEN 'large'
+                 WHEN (City.population >= 9000000) THEN 'Xlarge'
+                 ELSE null
+                 END as CityPopulation
+     FROM City),
+totalRev as (select retail_rev.Year, retail_rev.city, retail_rev.state, (COALESCE(retail_rev.retailRev,0) + COALESCE(discount_rev.discountRev,0)) as total_rev
+FROM retail_rev
+JOIN discount_rev
+    ON retail_rev.Year = discount_rev.Year AND
+       retail_rev.city = discount_rev.city AND
+       retail_rev.state = discount_rev.state),
+
+revWithCategory as (Select citySize.CityPopulation, totalRev.Year, SUM(totalRev.total_rev) as total
+    FROM citySize
+    JOIN totalRev ON
+        citySize.city = totalRev.city AND
+        citySize.state = totalRev.state
+    GROUP BY totalRev.Year, citySize.CityPopulation)
+SELECT revWithCategory.Year,
+    SUM(CASE WHEN revWithCategory.CityPopulation = 'small' THEN  total END) AS SMALL,
+    SUM(CASE WHEN revWithCategory.CityPopulation = 'medium' THEN  total END) AS MEDIUM,
+    SUM(CASE WHEN revWithCategory.CityPopulation = 'large' THEN  total END) AS LARGE,
+    SUM(CASE WHEN revWithCategory.CityPopulation = 'xlarge' THEN  total END) AS Extra_Large
+    FROM revWithCategory
+    group by revWithCategory.Year" ;
+
+*** View Childcare Sales Volume Report (report_7.php) ***
+
+//Query to retrieve all the available childcare limits
+$limits = "SELECT * FROM Childcare";
+
+//Query data for report
+$sql = "WITH original AS (SELECT month_of_year, childcare_limit, SUM(total_amount) AS total_sales
+    FROM (SELECT DATE_FORMAT(Sold.`date`,'%Y-%m')                                    AS month_of_year,
+                 IFNULL(Store.`limit`, 0)                                            AS childcare_limit,
+                 Sold.quantity * IFNULL(HasDiscount.discount_price, Product.price)   AS total_amount
+          FROM Sold
+                   LEFT JOIN Product ON Product.pid = Sold.pid
+                   LEFT JOIN HasDiscount ON HasDiscount.pid = Sold.pid AND HasDiscount.`date` = Sold.`date`
+                   LEFT JOIN Store ON Store.store_no = Sold.store_no
+          WHERE Sold.`date` > (SELECT MAX(sold.`date`) FROM sold) - INTERVAL 12 month) AS SalesPerChildcareLimit
+    GROUP BY month_of_year, childcare_limit),
+    extended AS (SELECT month_of_year,
+                 $s FROM original)
+    SELECT month_of_year, $s1
+    FROM extended
+    GROUP BY month_of_year";
+
+*** View Restaurant Impact on Category Sales (report_8.php) ***
+
+//Query data for report
+$sql = "with getProductCategoryInSol as (SELECT Sold.store_no,
+ProductCategory.name,
+SUM(quantity) as quantity_sold
+FROM Sold
+LEFT JOIN  ProductCategory ON Sold.pid = ProductCategory.pid
+GROUP BY Sold.store_no, ProductCategory.name),
+
+fv as (SELECT
+    getProductCategoryInSol.name,
+CASE
+    WHEN Store.restaurant = 1 Then 'Restaurant'
+    WHEN Store.restaurant = 0 Then 'Non-restaurant'
+END AS store_type,
+SUM(quantity_sold) as quantity_sold
+FROM Store
+JOIN getProductCategoryInSol
+ON Store.store_no = getProductCategoryInSol.store_no
+GROUP BY getProductCategoryInSol.name, store_type
+ORDER BY getProductCategoryInSol.name, store_type),
+
+c as (SELECT
+    DISTINCT(getProductCategoryInSol.name),
+    CASE
+    WHEN Store.restaurant = 1 Then 'Restaurant'
+    WHEN Store.restaurant = 0 Then 'Non-restaurant'
+END AS store_type
+FROM Store, getProductCategoryInSol)
+
+SELECT c.name, c.store_type, IFNULL(fv.quantity_sold,0) AS quantity_sold
+FROM c
+LEFT JOIN fv ON c.name = fv.name AND c.store_type = fv.store_type
+ORDER BY c.name, c.store_type desc";
+
+*** View Advertising Campaign Analysis Report (report_9.php) ***
+
+//Query data for report
+$sql = "WITH ALLResult (pid, name, total_sold_during_campaign, total_sold_outside_campaign, difference) AS (
+        SELECT pid,
+               name,
+               SUM(sold_during_campaign)                              AS total_sold_during_campaign,
+               SUM(sold_outside_campaign)                             AS total_sold_outside_campaign,
+               SUM(sold_during_campaign) - SUM(sold_outside_campaign) AS difference
+        FROM (SELECT Product.pid,
+                     Product.name,
+                     IF(DateAdCampaign.description IS NOT NULL AND Sold.quantity IS NOT NULL, Sold.quantity, 0) AS sold_during_campaign,
+                     IF(DateAdCampaign.description IS NULL AND Sold.quantity IS NOT NULL, Sold.quantity, 0)     AS sold_outside_campaign
+              FROM Product
+                       JOIN HasDiscount ON Product.pid = HasDiscount.pid
+                       LEFT JOIN Sold ON Product.pid = Sold.pid AND HasDiscount.`date` = Sold.`date`
+                       LEFT JOIN DateAdCampaign ON HasDiscount.`date` = DateAdCampaign.`date`
+                       ) AS ProductsWithDiscountSalesSummary
+        GROUP BY pid, name
+    )
+        (SELECT *
+         FROM ALLResult
+         ORDER BY difference DESC
+         limit 10)
+    UNION
+    (SELECT *
+     FROM (SELECT *
+           FROM ALLResult
+           ORDER BY difference ASC
+           limit 10) AS ProductResultsOrdered
+     ORDER BY difference DESC)";

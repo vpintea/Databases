@@ -31,7 +31,7 @@ if(mysqli_num_rows($result) > 0){
     }
     
     $sql = "WITH original AS (SELECT month_of_year, childcare_limit, SUM(total_amount) AS total_sales
-    FROM (SELECT MONTH(Sold.`date`)                                                  AS month_of_year,
+    FROM (SELECT DATE_FORMAT(Sold.`date`,'%Y-%m')                                    AS month_of_year,
                  IFNULL(Store.`limit`, 0)                                            AS childcare_limit,
                  Sold.quantity * IFNULL(HasDiscount.discount_price, Product.price)   AS total_amount
           FROM Sold
@@ -45,6 +45,9 @@ if(mysqli_num_rows($result) > 0){
     SELECT month_of_year, $s1
     FROM extended
     GROUP BY month_of_year";
+
+    // echo "s is: $s";
+    // echo "s1 is: $s1";
 
     $result = mysqli_query($conn, $sql);
 
