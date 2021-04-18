@@ -3,9 +3,8 @@
 define('DB_HOST', "127.0.0.1");
 define('DB_PORT', "3307"); //add the port you are using to connect with your database
 define('DB_USER', "root");
-
-define('DB_PASS', "tornado35"); //add your password
-define('DB_SCHEMA', "test2");
+define('DB_PASS', "gatech123"); //add your password
+define('DB_SCHEMA', "demo_data");
 
 
 //Create connection
