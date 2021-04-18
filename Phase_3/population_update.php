@@ -5,7 +5,34 @@ include('lib/init.php');
 
 <a href="main_menu.php">Back to Main Menu</a><br>
 
-<h2>View City Population</h2>
+<br>
+
+<h2>City Population Update</h2>
+
+<form method="post">
+    <label for="city">City</label>
+    <input type="text" name="city" id="city">
+    <label for="state">State</label>
+    <input type="text" name="state" id="state">
+    <label for="population">Population</label>
+    <input type="number" name="population" id="population">
+    <input type="submit" name="submit" value="Submit">
+</form>
+
+<?php if (isset($_POST['submit'])) { ?>
+
+    <?php
+    $sql ="UPDATE city SET population = '$_POST[population]' WHERE city = '$_POST[city]' AND state = '$_POST[state]'";
+
+    mysqli_query($conn, $sql);
+    if (mysqli_affected_rows($conn)) { //https://www.php.net/manual/en/mysqli.affected-rows.php
+        echo "New record updated successfully";
+    } else {
+        echo "Error updating record: " . $sql . "<br>" . mysqli_error($conn);
+    }
+}?>
+
+<h2>City Population</h2>
 
 <table border="1" cellspacing="2" cellpadding="2">
     <tr>
@@ -34,31 +61,5 @@ include('lib/init.php');
     }
     ?>
 </table>
-<br>
-
-<h2>City Population Update</h2>
-
-<form method="post">
-    <label for="city">City</label>
-    <input type="text" name="city" id="city">
-    <label for="state">State</label>
-    <input type="text" name="state" id="state">
-    <label for="population">Population</label>
-    <input type="number" name="population" id="population">
-    <input type="submit" name="submit" value="Submit">
-</form>
-
-<?php if (isset($_POST['submit'])) { ?>
-
-<?php
-    $sql ="UPDATE city SET population = '$_POST[population]' WHERE city = '$_POST[city]' AND state = '$_POST[state]'";
-
-    mysqli_query($conn, $sql);
-    if (mysqli_affected_rows($conn)) { //https://www.php.net/manual/en/mysqli.affected-rows.php
-        echo "New record updated successfully";
-    } else {
-        echo "Error updating record: " . $sql . "<br>" . mysqli_error($conn);
-    }
-}?>
 
 <?php include "lib/footer.php"; ?>
