@@ -14,9 +14,9 @@ include('lib/init.php'); ?>
     SELECT
     Category.name as category_name,
     format(count(Product.pid),0) as total_num_products,
-    concat('$',min(Product.price)) as min_retail_price,
+    min(Product.price) as min_retail_price,
     round(avg(Product.price),2) as avg_price,
-    max(Product.price) as max_price
+    format(max(Product.price),2) as max_price
     FROM
     Category
     LEFT JOIN ProductCategory ON  Category.name = productCategory.name
