@@ -1,7 +1,7 @@
 <?php include "lib/header.php";
 include('lib/init.php'); ?>
 
-<h2>View Revenue by Population</h2>
+<h2>Revenue by Population Report</h2>
 
 <br>
 <a href="main_menu.php">Back to Main Menu</a>
@@ -45,10 +45,10 @@ revWithCategory as (Select citySize.CityPopulation, totalRev.Year, SUM(totalRev.
         citySize.state = totalRev.state
     GROUP BY totalRev.Year, citySize.CityPopulation)
 SELECT revWithCategory.Year,
-    SUM(CASE WHEN revWithCategory.CityPopulation = 'small' THEN  total END) AS SMALL,
-    SUM(CASE WHEN revWithCategory.CityPopulation = 'medium' THEN  total END) AS MEDIUM,
-    SUM(CASE WHEN revWithCategory.CityPopulation = 'large' THEN  total END) AS LARGE,
-    SUM(CASE WHEN revWithCategory.CityPopulation = 'xlarge' THEN  total END) AS Extra_Large
+    concat('$',format(SUM(CASE WHEN revWithCategory.CityPopulation = 'small' THEN  total END),2)) AS SMALL,
+    concat('$',format(SUM(CASE WHEN revWithCategory.CityPopulation = 'medium' THEN  total END),2)) AS MEDIUM,
+    concat('$',format(SUM(CASE WHEN revWithCategory.CityPopulation = 'large' THEN  total END),2)) AS LARGE,
+    concat('$',format(SUM(CASE WHEN revWithCategory.CityPopulation = 'xlarge' THEN  total END),2)) AS Extra_Large
     FROM revWithCategory
     group by revWithCategory.Year" ;
   
