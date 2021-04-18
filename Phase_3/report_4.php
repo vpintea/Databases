@@ -1,13 +1,13 @@
 <?php include "lib/header.php";
 include('lib/init.php'); ?>
 
-<h2>View Outdoor Furniture on Groundhog Day Report</h2>
+<h2>Outdoor Furniture on Groundhog Day Report</h2>
 
 <br>
 <a href="main_menu.php">Back to Main Menu</a>
 
 <?php
-$sql = "SELECT YEAR(x.date) as Year, sum(x.quantity) as TotalQuantity, sum(x.quantity)/365 as AvgDailyQuantity, 
+$sql = "SELECT YEAR(x.date) as Year, format(sum(x.quantity),0) as TotalQuantity, round(sum(x.quantity)/365,2) as AvgDailyQuantity, 
   sum(y.quant) as GroundHogDay
 FROM 
 (SELECT date, quantity -- only outdoor sales
