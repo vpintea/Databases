@@ -25,9 +25,9 @@ $result = mysqli_query($conn, $sql);
         echo '<table border="1" cellspacing="2" cellpadding="2"> 
         <tr> 
             <td> Year </td> 
-            <td> Total Quantity </td> 
-            <td> Average Daily Quantity </td> 
-            <td> Ground Hog Day Quantity </td> 
+            <td> Total Units Sold </td> 
+            <td> Average Daily Units Sold </td> 
+            <td> Ground Hog Day Units Sold </td> 
         </tr>';
 
         while ($row = $result->fetch_assoc()) {
