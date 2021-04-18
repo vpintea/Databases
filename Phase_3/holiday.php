@@ -3,6 +3,8 @@ include('lib/header.php');
 include('lib/init.php');
 ?>
 
+<a href="main_menu.php">Back to Main Menu</a><br>
+
 <h2>View Holidays</h2>
 
 <table border="1" cellspacing="2" cellpadding="2">
@@ -62,7 +64,5 @@ if (isset($_POST['submit'])) {
      }
 }
 ?>
-
-<br><a href="main_menu.php">Back to Main Menu</a><br>
 
 <?php include('lib/footer.php'); ?>

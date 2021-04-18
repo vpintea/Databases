@@ -3,8 +3,10 @@ include('lib/header.php');
 include('lib/init.php');
 ?>
 
-<h2>View Restaurant Impact on Category Sales</h2>
+<br>
+<a href="main_menu.php">Back to Main Menu</a>
 
+<h2>View Restaurant Impact on Category Sales</h2>
 
 <?php
 
@@ -71,7 +73,5 @@ $result = mysqli_query($conn, $sql);
   }
     
 ?>
-
-<br><a href="main_menu.php">Back to Main Menu</a><br>
 
 <?php include "lib/footer.php"; ?>

@@ -1,10 +1,9 @@
 <?php include "lib/header.php";
 include('lib/init.php'); ?>
 
-<h2>Revenue by Population Report</h2>
+<a href="main_menu.php">Back to Main Menu</a><br>
 
-<br>
-<a href="main_menu.php">Back to Main Menu</a>
+<h2>Revenue by Population Report</h2>
 
 <?php 
 $sql = "-- Calculate retail revenue for each city

@@ -1,10 +1,9 @@
 <?php include "lib/header.php";
 include('lib/init.php'); ?>
 
-<h2>Outdoor Furniture on Groundhog Day Report</h2>
+<a href="main_menu.php">Back to Main Menu</a><br>
 
-<br>
-<a href="main_menu.php">Back to Main Menu</a>
+<h2>Outdoor Furniture on Groundhog Day Report</h2>
 
 <?php
 $sql = "SELECT YEAR(x.date) as Year, format(sum(x.quantity),0) as TotalQuantity, round(sum(x.quantity)/365,2) as AvgDailyQuantity, 

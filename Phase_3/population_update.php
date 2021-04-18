@@ -3,6 +3,7 @@ include('lib/header.php');
 include('lib/init.php');
 ?>
 
+<a href="main_menu.php">Back to Main Menu</a><br>
 
 <h2>View City Population</h2>
 
@@ -59,7 +60,5 @@ include('lib/init.php');
         echo "Error updating record: " . $sql . "<br>" . mysqli_error($conn);
     }
 }?>
-
-<br><a href="main_menu.php">Back to Main Menu</a><br>
 
 <?php include "lib/footer.php"; ?>
