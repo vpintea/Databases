@@ -6,8 +6,6 @@ include('lib/init.php'); ?>
 <br>
 <a href="main_menu.php">Back to Main Menu</a>
 
-<h2>Results</h2>
-
 <?php 
 $sql = "-- Calculate retail revenue for each city
 with retail_rev as (select YEAR(Sold.date) as Year, city, state, sum(price*quantity) as retailRev
