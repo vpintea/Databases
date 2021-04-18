@@ -39,7 +39,7 @@ FROM Store, getProductCategoryInSol)
 SELECT c.name, c.store_type, IFNULL(fv.quantity_sold,0) AS quantity_sold
 FROM c
 LEFT JOIN fv ON c.name = fv.name AND c.store_type = fv.store_type
-ORDER BY c.name, c.store_type desc";
+ORDER BY c.name, c.store_type";
 
 $result = mysqli_query($conn, $sql);
 
