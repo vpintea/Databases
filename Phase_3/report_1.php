@@ -7,7 +7,7 @@ include('lib/init.php'); ?>
 <a href="main_menu.php">Back to Main Menu</a>
 
 
-<h2>Advertising Campaign Analysis Report</h2>
+<h2>View Category Report</h2>
 
 <?php
     $sql = "

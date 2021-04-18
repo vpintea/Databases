@@ -14,7 +14,7 @@ include('lib/init.php'); ?>
                SUM(sold_during_campaign) - SUM(sold_outside_campaign) AS difference
         FROM (SELECT Product.pid,
                      Product.name,
-                     IF(DateAdCampaign.description IS NOT NULL, Sold.quantity, 0) AS sold_during_campaign,
+                     IF(DateAdCampaign.description IS NOT NULL AND Sold.quantity IS NOT NULL, Sold.quantity, 0) AS sold_during_campaign,
                      IF(DateAdCampaign.description IS NULL AND Sold.quantity IS NOT NULL, Sold.quantity, 0)     AS sold_outside_campaign
               FROM Product
                        JOIN HasDiscount ON Product.pid = HasDiscount.pid

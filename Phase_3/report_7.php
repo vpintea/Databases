@@ -31,20 +31,23 @@ if(mysqli_num_rows($result) > 0){
     }
     
     $sql = "WITH original AS (SELECT month_of_year, childcare_limit, SUM(total_amount) AS total_sales
-    FROM (SELECT MONTH(Sold.`date`)                                                  AS month_of_year,
+    FROM (SELECT DATE_FORMAT(Sold.`date`,'%Y-%m')                                    AS month_of_year,
                  IFNULL(Store.`limit`, 0)                                            AS childcare_limit,
                  Sold.quantity * IFNULL(HasDiscount.discount_price, Product.price)   AS total_amount
           FROM Sold
                    LEFT JOIN Product ON Product.pid = Sold.pid
                    LEFT JOIN HasDiscount ON HasDiscount.pid = Sold.pid AND HasDiscount.`date` = Sold.`date`
                    LEFT JOIN Store ON Store.store_no = Sold.store_no
-          WHERE Sold.`date` > NOW() - INTERVAL 12 month) AS SalesPerChildcareLimit
+          WHERE Sold.`date` > (SELECT MAX(sold.`date`) FROM sold) - INTERVAL 12 month) AS SalesPerChildcareLimit
     GROUP BY month_of_year, childcare_limit),
     extended AS (SELECT month_of_year,
                  $s FROM original)
     SELECT month_of_year, $s1
     FROM extended
     GROUP BY month_of_year";
+
+    // echo "s is: $s";
+    // echo "s1 is: $s1";
 
     $result = mysqli_query($conn, $sql);
 

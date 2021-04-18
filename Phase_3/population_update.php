@@ -3,6 +3,38 @@ include('lib/header.php');
 include('lib/init.php');
 ?>
 
+
+<h2>View City Population</h2>
+
+<table border="1" cellspacing="2" cellpadding="2">
+    <tr>
+        <th>City</th>
+        <th>State</th>
+        <th>Population</th>
+    </tr>
+
+    <?php
+
+    $query = "SELECT city, state, population FROM city";
+
+    $result = mysqli_query($conn, $query);
+
+    if (!empty($result) && (mysqli_num_rows($result) == 0) ) {
+        array_push($error_msg,  "SELECT ERROR: City" . __FILE__ ." line:". __LINE__ );
+        print "No population info found in the system";
+    }
+
+    while ($row = $result->fetch_assoc()){
+        print "<tr>";
+        print "<td>{$row['city']}</td>";
+        print "<td>{$row['state']}</td>";
+        print "<td>{$row['population']}</td>";
+        print "</tr>";
+    }
+    ?>
+</table>
+<br>
+
 <h2>City Population Update</h2>
 
 <form method="post">
@@ -17,25 +49,8 @@ include('lib/init.php');
 
 <?php if (isset($_POST['submit'])) { ?>
 
-    <?php $sql ="UPDATE city SET population = '$_POST[population]' WHERE city = '$_POST[city]' AND state = '$_POST[state]'";
-
-    // TESTING
-
-//    $result = mysqli_query($conn, $sql);
-//    echo "result: " . $result;
-//    echo "num of rows: " . $result->num_rows;
-//    $row_cnt = $result->num_rows;
-//    printf("Result set has %d rows.\n", $row_cnt);
-    // result is always 1 and row_cnt is always 0
-
-    //  https://www.w3schools.com/php/php_mysql_update.asp
-    //  https://www.tutorialspoint.com/mysqli/mysqli_update_query.htm
-    //  https://www.php.net/manual/en/mysqli-result.num-rows.php
-    //  if ($conn->query($sql) === TRUE) {
-    //  if ($result->num_rows > 0)
-    //  if (mysqli_query($conn, $sql))
-
-    // END OF TEST
+<?php
+    $sql ="UPDATE city SET population = '$_POST[population]' WHERE city = '$_POST[city]' AND state = '$_POST[state]'";
 
     mysqli_query($conn, $sql);
     if (mysqli_affected_rows($conn)) { //https://www.php.net/manual/en/mysqli.affected-rows.php
