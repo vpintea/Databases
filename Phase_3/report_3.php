@@ -81,7 +81,7 @@ function displayReport($selected_state){
   }
 
   if(mysqli_num_rows($result_report) > 0){
-    echo "<h3>Results showing for". $selected_state. "</h3>";
+    echo "<h3>Results showing for ". $selected_state. "</h3>";
     echo '<table border="1" cellspacing="2" cellpadding="2">
     <tr>
         <td> Store Number </td>
