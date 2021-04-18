@@ -44,10 +44,10 @@ revWithCategory as (Select citySize.CityPopulation, totalRev.Year, SUM(totalRev.
         citySize.state = totalRev.state
     GROUP BY totalRev.Year, citySize.CityPopulation)
 SELECT revWithCategory.Year,
-    concat('$',format(SUM(CASE WHEN revWithCategory.CityPopulation = 'small' THEN  total END),2)) AS SMALL,
-    concat('$',format(SUM(CASE WHEN revWithCategory.CityPopulation = 'medium' THEN  total END),2)) AS MEDIUM,
-    concat('$',format(SUM(CASE WHEN revWithCategory.CityPopulation = 'large' THEN  total END),2)) AS LARGE,
-    concat('$',format(SUM(CASE WHEN revWithCategory.CityPopulation = 'xlarge' THEN  total END),2)) AS Extra_Large
+    format(SUM(CASE WHEN revWithCategory.CityPopulation = 'small' THEN  total END),2) AS SMALL,
+    format(SUM(CASE WHEN revWithCategory.CityPopulation = 'medium' THEN  total END),2) AS MEDIUM,
+    format(SUM(CASE WHEN revWithCategory.CityPopulation = 'large' THEN  total END),2) AS LARGE,
+    format(SUM(CASE WHEN revWithCategory.CityPopulation = 'xlarge' THEN  total END),2) AS Extra_Large
     FROM revWithCategory
     group by revWithCategory.Year" ;
   
