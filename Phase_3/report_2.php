@@ -45,7 +45,7 @@ include('lib/init.php'); ?>
     format(couchSofasProducts.price,2) as prodPrice,
     totalPredicted.totalSold,
     totalNumberUnitWithDiscount.totalSoldDiscount,
-    format((totalPredicted.totalSold - totalNumberUnitWithDiscount.totalSoldDiscount),2) as totalRetail,
+    (totalPredicted.totalSold - totalNumberUnitWithDiscount.totalSoldDiscount) as totalRetail,
     format((COALESCE(totalNumberUnitWithDiscount.total_rev,0) + totalNumberUnitWithoutDiscount.total_rev),2) as total_revenue,
     format(totalPredicted.TotalPredictedRevenue,2) as totalProdRev,
     format((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue,2) as difference
@@ -68,12 +68,12 @@ include('lib/init.php'); ?>
             <td> PID </td>
             <td> Product Name </td>
             <td> Product Retail Price </td>
-            <td> Total Sales </td>
-            <td> Total Sales Discount</td>
-            <td> Total Sales Retail Price</td>
+            <td> Total Units Sold </td>
+            <td> Total Units Sold at Discount</td>
+            <td> Total Units Sold at Retail Price</td>
             <td> Total Revenue</td>
             <td> Total Predicted Revenue</td>
-            <td>  Difference Actual VS Predicted </td>
+            <td> Difference Actual VS Predicted </td>
         </tr>';
 
         while ($row = $result->fetch_assoc()) {
