@@ -20,7 +20,7 @@ if(mysqli_num_rows($result) > 0){
     while($row = mysqli_fetch_assoc($result)) {
         $i++;
         $s .= "CASE WHEN childcare_limit = ".$row["limit"]. " THEN total_sales END AS `".$row["limit"]."`";
-        $s1.= "SUM(`".$row["limit"]."`) AS `".$row["limit"]."`";
+        $s1.= "format(SUM(`".$row["limit"]."`),2) AS `".$row["limit"]."`";
         $s2 .= "<td> ".$row["limit"]." </td> ";
         if($i < mysqli_num_rows($result)){
             $s.=", ";
