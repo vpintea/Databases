@@ -38,7 +38,7 @@ if(mysqli_num_rows($result) > 0){
                    LEFT JOIN Product ON Product.pid = Sold.pid
                    LEFT JOIN HasDiscount ON HasDiscount.pid = Sold.pid AND HasDiscount.`date` = Sold.`date`
                    LEFT JOIN Store ON Store.store_no = Sold.store_no
-          WHERE Sold.`date` > NOW() - INTERVAL 12 month) AS SalesPerChildcareLimit
+          WHERE Sold.`date` > (SELECT MAX(sold.`date`) FROM sold) - INTERVAL 12 month) AS SalesPerChildcareLimit
     GROUP BY month_of_year, childcare_limit),
     extended AS (SELECT month_of_year,
                  $s FROM original)
