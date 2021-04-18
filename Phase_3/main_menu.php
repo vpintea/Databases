@@ -48,7 +48,7 @@ include('lib/init.php'); ?>
     // query the number of stores that offer childcare
     $sql = "SELECT format(COUNT(*),0) as TotalStoresOfferChildcare 
     FROM Store 
-    WHERE `limit` IS NOT NULL";
+    WHERE `limit` != 0";
 
     $result = mysqli_query($conn, $sql);
     if(mysqli_num_rows($result) > 0){
