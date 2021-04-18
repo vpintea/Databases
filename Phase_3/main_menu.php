@@ -21,7 +21,7 @@ include('lib/init.php'); ?>
 <?php   
     
     // query the number of stores
-    $sql = "SELECT COUNT(*) as TotalStores 
+    $sql = "SELECT format(COUNT(*),0) as TotalStores 
     FROM Store";
 
     $result = mysqli_query($conn, $sql);
@@ -46,7 +46,7 @@ include('lib/init.php'); ?>
     }
     
     // query the number of stores that offer childcare
-    $sql = "SELECT COUNT(*) as TotalStoresOfferChildcare 
+    $sql = "SELECT format(COUNT(*),0) as TotalStoresOfferChildcare 
     FROM Store 
     WHERE `limit` IS NOT NULL";
 
@@ -59,7 +59,7 @@ include('lib/init.php'); ?>
     }
 
     // query the number of products
-    $sql = "SELECT COUNT(*) as TotalProducts 
+    $sql = "SELECT format(COUNT(*),0) as TotalProducts 
     FROM Product";
 
     $result = mysqli_query($conn, $sql);
