@@ -51,7 +51,7 @@ CREATE TABLE `Date` (
 CREATE TABLE Holiday (
   holiday_name varchar(250) NOT NULL,
   `date` date NOT NULL,
-  PRIMARY KEY (holiday_name),
+  PRIMARY KEY (holiday_name, `date`),
   FOREIGN KEY (`date`) REFERENCES `Date`(`date`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
