@@ -13,8 +13,8 @@ include('lib/init.php'); ?>
     $sql = "
     SELECT
     Category.name as category_name,
-    count(Product.pid) as total_num_products,
-    min(Product.price) as min_retail_price,
+    format(count(Product.pid),0) as total_num_products,
+    concat('$',min(Product.price)) as min_retail_price,
     round(avg(Product.price),2) as avg_price,
     max(Product.price) as max_price
     FROM
