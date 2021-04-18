@@ -45,10 +45,10 @@ include('lib/init.php'); ?>
     couchSofasProducts.price,
     totalPredicted.totalSold,
     totalNumberUnitWithDiscount.totalSoldDiscount,
-    totalPredicted.totalSold - totalNumberUnitWithDiscount.totalSoldDiscount as totalRetail,
-    (COALESCE(totalNumberUnitWithDiscount.total_rev,0) + totalNumberUnitWithoutDiscount.total_rev) as total_revenue,
+    format((totalPredicted.totalSold - totalNumberUnitWithDiscount.totalSoldDiscount),2) as totalRetail,
+    format((COALESCE(totalNumberUnitWithDiscount.total_rev,0) + totalNumberUnitWithoutDiscount.total_rev),2) as total_revenue,
     totalPredicted.TotalPredictedRevenue,
-    concat('$',format((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue,2)) as difference
+    format((totalNumberUnitWithDiscount.total_rev + totalNumberUnitWithoutDiscount.total_rev) - totalPredicted.TotalPredictedRevenue,2) as difference
     FROM couchSofasProducts
     LEFT JOIN totalNumberUnitWithDiscount ON couchSofasProducts.pid = totalNumberUnitWithDiscount.PID
     LEFT JOIN totalNumberUnitWithoutDiscount ON couchSofasProducts.pid = totalNumberUnitWithoutDiscount.PID
