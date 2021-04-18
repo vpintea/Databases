@@ -7,7 +7,7 @@ include('lib/init.php'); ?>
 <a href="main_menu.php">Back to Main Menu</a>
 
 
-<h2>View Actual vs. Predicted Revenue for Couches & Sofas Report</h2>
+<h2>Actual vs. Predicted Revenue for Couches & Sofas Report</h2>
 
 <?php
     $sql = "
