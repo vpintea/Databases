@@ -1,6 +1,3 @@
-
-# cs6400-2021-01-Team029
-
 # Databases
-# This is a collection of database work
 
+This holds a CRUD application for a hypothetical retail store. It shows the conceptual database design all the way to the final application.
